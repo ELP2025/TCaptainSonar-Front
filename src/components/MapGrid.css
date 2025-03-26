@@ -1,0 +1,103 @@
+.grid {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin: auto;
+  }
+  .row {
+    display: flex;
+  }
+  .cell-wrapper {
+    position: relative;
+  }
+  
+  .cell {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background-color: #e0f7fa; /* BLEU CLAIR */
+    border: 1px solid #bbb;
+    box-sizing: border-box;
+    cursor: pointer;
+    z-index: 1;
+  
+    /* Bordures grasses pour séparer les blocs */
+    border-left: 1px solid #bbb;
+    border-top: 1px solid #bbb;
+  }
+  
+  .cell.start {
+    background-color: #4caf50;
+  }
+  .cell.current {
+    background-color: #2196f3;
+  }
+  .cell.path {
+    background-color: #90caf9;
+  }
+  
+  /* Bordure épaisse à droite des blocs */
+  .row .cell-wrapper:nth-child(5n) .cell {
+    border-right: 3px solid #000;
+  }
+  
+  /* Bordure épaisse en bas des blocs */
+  .grid .row:nth-child(5n) .cell-wrapper .cell {
+    border-bottom: 3px solid #000;
+  }
+  
+  /* Bordure gauche + haut des premières lignes/colonnes */
+  .row:first-child .cell-wrapper .cell {
+    border-top: 3px solid #000;
+  }
+  .row .cell-wrapper:first-child .cell {
+    border-left: 3px solid #000;
+  }
+  
+  /* Chiffre géant en fond */
+  .sector-bg {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.05);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .grid-wrapper {
+    position: relative;
+    width: fit-content;
+    margin: auto;
+  }
+  
+  .sector-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2; /* Au-dessus de la grille */
+  }
+
+  .sector-number {
+    position: absolute;
+    width: 100px; /* Augmenté pour mieux contenir le texte */
+    height: 100px;
+    font-size: 100px; /* Taille réduite pour mieux s'adapter */
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translate(-50%, -50%); /* Centrage précis */
+    margin-left: 0; /* Suppression du décalage manuel */
+    margin-top: 0;
+  }
