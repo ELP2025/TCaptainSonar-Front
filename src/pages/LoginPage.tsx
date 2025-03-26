@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { LoginForm } from "../components/LoginForm";
 
 interface LoginPageProps {
     setIsAuthenticated: (value: boolean) => void;
@@ -23,30 +24,14 @@ interface LoginPageProps {
               if (!response.ok) {
                   throw new Error(data.message || 'Erreur de connexion');
               }
-  
-              localStorage.setItem('token', data.token);
+              document.cookie = "token="+data.token
               setIsAuthenticated(true); // <-- Ceci déclenche le re-render et affiche la HomePage
           } catch (err) {
               setError((err as Error).message);
           }
       };
   
-      return <div>
-          {error && <p style={{color: 'red'}}>{error}</p>}
-          <form onSubmit={handleLogin}>
-              <input type="text"
-                      placeholder="Nom d'utilisateur"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      required />
-              <input type="password"
-                      placeholder="Mot de passe"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required />
-              <button type="submit">Se connecter</button>
-          </form>
-      </div>
+      return <LoginForm error="" onSubmit={handleLogin} onPasswordChange={(e) => setPassword(e.target.value)} onUsernameChange={(e) => setUsername(e.target.value)}/>
   }
 
 export default LoginPage; 
