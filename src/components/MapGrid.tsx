@@ -11,11 +11,74 @@ const BLOCK_SIZE = 5;
 const CELL_SIZE = 60;
 const LETTERS = "ABCDEFGHIJKLMNO";
 
+// Génération aléatoire d'îles
+const generateIslands = (): Coord[] => {
+  const totalIslands = 9;
+  const maxIslandSize = 4;
+  const occupied = new Set<string>();
+  const islands: Coord[] = [];
+
+  const directions = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+  ];
+
+  const isFree = (x: number, y: number): boolean =>
+    x >= 0 && y >= 0 && x < SIZE && y < SIZE && !occupied.has(`${x},${y}`);
+
+  for (let i = 0; i < totalIslands; i++) {
+    let attempts = 0;
+    let island: Coord[] = [];
+
+    while (attempts < 50 && island.length === 0) {
+      attempts++;
+      const x = Math.floor(Math.random() * SIZE);
+      const y = Math.floor(Math.random() * SIZE);
+      if (!isFree(x, y)) continue;
+
+      const size = 1 + Math.floor(Math.random() * maxIslandSize);
+      island.push({ x, y });
+      occupied.add(`${x},${y}`);
+      let last = { x, y };
+
+      while (island.length < size) {
+        const [dx, dy] = directions[Math.floor(Math.random() * directions.length)];
+        const nx = last.x + dx;
+        const ny = last.y + dy;
+        if (isFree(nx, ny)) {
+          island.push({ x: nx, y: ny });
+          occupied.add(`${nx},${ny}`);
+          last = { x: nx, y: ny };
+        } else {
+          break;
+        }
+      }
+    }
+
+    islands.push(...island);
+  }
+
+  return islands;
+};
+
 const MapGrid: React.FC = () => {
   const [path, setPath] = useState<Coord[]>([]);
   const [position, setPosition] = useState<Coord | null>(null);
+  const [islands, setIslands] = useState<Coord[]>(generateIslands());
+
+  const resetMap = () => {
+    setPath([]);
+    setPosition(null);
+    setIslands(generateIslands());
+  };
+  
 
   const handleCellClick = (x: number, y: number) => {
+    const isIsland = islands.some(p => p.x === x && p.y === y);
+    if (isIsland) return;
+
     if (!position) {
       setPosition({ x, y });
       setPath([{ x, y }]);
@@ -35,9 +98,9 @@ const MapGrid: React.FC = () => {
 
   return (
     <div className="grid-wrapper">
-      {/* Lettres en haut des colonnes */}
+      {/* Lettres A-O en haut */}
       <div className="column-labels">
-        <div className="empty-corner"></div> {/* Espace pour l'angle */}
+        <div className="empty-corner"></div>
         {Array.from({ length: SIZE }, (_, col) => (
           <div key={col} className="column-label">
             {LETTERS[col]}
@@ -46,7 +109,7 @@ const MapGrid: React.FC = () => {
       </div>
 
       <div className="grid-and-row-labels">
-        {/* Chiffres à gauche des lignes */}
+        {/* Chiffres 1-15 à gauche */}
         <div className="row-labels">
           {Array.from({ length: SIZE }, (_, row) => (
             <div key={row} className="row-label">
@@ -63,11 +126,14 @@ const MapGrid: React.FC = () => {
                 const isStart = path.length > 0 && path[0].x === col && path[0].y === row;
                 const isCurrent = position?.x === col && position?.y === row;
                 const isPath = path.some(p => p.x === col && p.y === row);
+                const isIsland = islands.some(p => p.x === col && p.y === row);
 
                 return (
                   <div key={col} className="cell-wrapper">
                     <div
-                      className={`cell ${isStart ? "start" : isCurrent ? "current" : isPath ? "path" : ""}`}
+                      className={`cell ${isIsland ? "island" : ""} ${
+                        isStart ? "start" : isCurrent ? "current" : isPath ? "path" : ""
+                      }`}
                       onClick={() => handleCellClick(col, row)}
                     />
                   </div>
@@ -78,29 +144,33 @@ const MapGrid: React.FC = () => {
         </div>
       </div>
 
-     {/* Overlay des numéros de secteur centrés */}
-    <div className="sector-overlay">
+      {/* Chiffres géants de secteurs */}
+      <div className="sector-overlay">
         {Array.from({ length: 9 }, (_, i) => {
-            const row = Math.floor(i / 3);
-            const col = i % 3;
-            // Calcul précis du centre en incluant les bordures
-            const centerX = col * (BLOCK_SIZE * CELL_SIZE) + (BLOCK_SIZE * CELL_SIZE) / 2 + col * 3;
-            const centerY = row * (BLOCK_SIZE * CELL_SIZE) + (BLOCK_SIZE * CELL_SIZE) / 2 + row * 3;
+          const row = Math.floor(i / 3);
+          const col = i % 3;
+          const centerX = col * (BLOCK_SIZE * CELL_SIZE) + (BLOCK_SIZE * CELL_SIZE) / 2 + col * 3;
+          const centerY = row * (BLOCK_SIZE * CELL_SIZE) + (BLOCK_SIZE * CELL_SIZE) / 2 + row * 3;
 
-            return (
+          return (
             <div
-                key={i}
-                className="sector-number"
-                style={{
+              key={i}
+              className="sector-number"
+              style={{
                 left: `${centerX}px`,
                 top: `${centerY}px`,
-                }}
+              }}
             >
-                {i + 1}
+              {i + 1}
             </div>
-            );
+            
+          );
         })}
-        </div>
+    </div>
+    <div className="action-panel">
+        <button onClick={resetMap}>🔁 Régénérer les îles</button>
+    </div>
+
     </div>
   );
 };
