@@ -6,12 +6,18 @@ type Coord = {
   y: number;
 };
 
+type MapGridProps = {
+  onSelectStart: (coord: Coord) => void;
+  startPosition: Coord | null;
+  isConfirmed: boolean;
+  onReset: () => void;
+};
+
 const SIZE = 15;
 const BLOCK_SIZE = 5;
 const CELL_SIZE = 60;
 const LETTERS = "ABCDEFGHIJKLMNO";
 
-// Génération aléatoire d'îles
 const generateIslands = (): Coord[] => {
   const totalIslands = 9;
   const maxIslandSize = 4;
@@ -63,42 +69,30 @@ const generateIslands = (): Coord[] => {
   return islands;
 };
 
-const MapGrid: React.FC = () => {
-  const [path, setPath] = useState<Coord[]>([]);
-  const [position, setPosition] = useState<Coord | null>(null);
+const MapGrid: React.FC<MapGridProps> = ({ onSelectStart, startPosition, isConfirmed, onReset }) => {
+  const [path, setPath] = useState<Coord[]>(startPosition ? [startPosition] : []);
+  const [position, setPosition] = useState<Coord | null>(startPosition);
   const [islands, setIslands] = useState<Coord[]>(generateIslands());
+
+  const handleCellClick = (x: number, y: number) => {
+    const isIsland = islands.some((p) => p.x === x && p.y === y);
+    if (isIsland || isConfirmed) return;
+
+    const newPos = { x, y };
+    setPosition(newPos);
+    setPath([newPos]);
+    onSelectStart(newPos);
+  };
 
   const resetMap = () => {
     setPath([]);
     setPosition(null);
     setIslands(generateIslands());
-  };
-  
-
-  const handleCellClick = (x: number, y: number) => {
-    const isIsland = islands.some(p => p.x === x && p.y === y);
-    if (isIsland) return;
-
-    if (!position) {
-      setPosition({ x, y });
-      setPath([{ x, y }]);
-      return;
-    }
-
-    const dx = Math.abs(x - position.x);
-    const dy = Math.abs(y - position.y);
-    const isAdjacent = (dx === 1 && dy === 0) || (dx === 0 && dy === 1);
-
-    if (isAdjacent) {
-      const newPos = { x, y };
-      setPosition(newPos);
-      setPath([...path, newPos]);
-    }
+    onReset();
   };
 
   return (
     <div className="grid-wrapper">
-      {/* Lettres A-O en haut */}
       <div className="column-labels">
         <div className="empty-corner"></div>
         {Array.from({ length: SIZE }, (_, col) => (
@@ -109,7 +103,6 @@ const MapGrid: React.FC = () => {
       </div>
 
       <div className="grid-and-row-labels">
-        {/* Chiffres 1-15 à gauche */}
         <div className="row-labels">
           {Array.from({ length: SIZE }, (_, row) => (
             <div key={row} className="row-label">
@@ -118,15 +111,14 @@ const MapGrid: React.FC = () => {
           ))}
         </div>
 
-        {/* Grille principale */}
         <div className="grid">
           {Array.from({ length: SIZE }, (_, row) => (
             <div key={row} className="row">
               {Array.from({ length: SIZE }, (_, col) => {
                 const isStart = path.length > 0 && path[0].x === col && path[0].y === row;
                 const isCurrent = position?.x === col && position?.y === row;
-                const isPath = path.some(p => p.x === col && p.y === row);
-                const isIsland = islands.some(p => p.x === col && p.y === row);
+                const isPath = path.some((p) => p.x === col && p.y === row);
+                const isIsland = islands.some((p) => p.x === col && p.y === row);
 
                 return (
                   <div key={col} className="cell-wrapper">
@@ -144,7 +136,6 @@ const MapGrid: React.FC = () => {
         </div>
       </div>
 
-      {/* Chiffres géants de secteurs */}
       <div className="sector-overlay">
         {Array.from({ length: 9 }, (_, i) => {
           const row = Math.floor(i / 3);
@@ -163,14 +154,9 @@ const MapGrid: React.FC = () => {
             >
               {i + 1}
             </div>
-            
           );
         })}
-    </div>
-    <div className="action-panel">
-        <button onClick={resetMap}>🔁 Régénérer les îles</button>
-    </div>
-
+      </div>
     </div>
   );
 };
