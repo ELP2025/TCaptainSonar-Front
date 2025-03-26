@@ -12,6 +12,9 @@
   }
   
   .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
     width: 60px;
     height: 60px;
@@ -26,15 +29,20 @@
     border-top: 1px solid #bbb;
   }
   
-  .cell.start {
-    background-color: #4caf50;
-  }
+ /* .cell.start {
+    background-color: #d32f2f;
+  }*/
+
   .cell.current {
     background-color: #2196f3;
   }
   .cell.path {
     background-color: #90caf9;
   }
+
+  .cell:hover {
+    box-shadow: 0 0 0 3px #ff5252 inset;
+  }  
   
   /* Bordure épaisse à droite des blocs */
   .row .cell-wrapper:nth-child(5n) .cell {
@@ -69,7 +77,14 @@
     color: rgba(0, 0, 0, 0.05);
     pointer-events: none;
     z-index: 0;
+  }.submarine {
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
+  
 
   .grid-wrapper {
     position: relative;
@@ -154,5 +169,20 @@
   .cell.island {
     background-color: #333;
     cursor: not-allowed;
+  }
+  
+  .submarine {
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    pointer-events: none;
+    /*{isStart && (
+                            <img src="/assets/submarine.gif" alt="Submarine" className="submarine" />
+                            )}*/
   }
   

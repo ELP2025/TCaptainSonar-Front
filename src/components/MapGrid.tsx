@@ -123,11 +123,15 @@ const MapGrid: React.FC<MapGridProps> = ({ onSelectStart, startPosition, isConfi
                 return (
                   <div key={col} className="cell-wrapper">
                     <div
-                      className={`cell ${isIsland ? "island" : ""} ${
-                        isStart ? "start" : isCurrent ? "current" : isPath ? "path" : ""
-                      }`}
-                      onClick={() => handleCellClick(col, row)}
-                    />
+                        className={`cell ${isIsland ? "island" : ""} ${
+                            isStart ? "start" : isCurrent ? "current" : isPath ? "path" : ""
+                        }`}
+                        onClick={() => handleCellClick(col, row)}
+                        >
+                        {isStart && <span className="submarine">🛥️</span>}
+                        
+                    </div>
+
                   </div>
                 );
               })}
