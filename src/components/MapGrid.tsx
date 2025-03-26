@@ -8,7 +8,8 @@ type Coord = {
 
 const SIZE = 15;
 const BLOCK_SIZE = 5;
-const CELL_SIZE = 60; // Taille d'une case en pixels
+const CELL_SIZE = 60;
+const LETTERS = "ABCDEFGHIJKLMNO";
 
 const MapGrid: React.FC = () => {
   const [path, setPath] = useState<Coord[]>([]);
@@ -34,51 +35,72 @@ const MapGrid: React.FC = () => {
 
   return (
     <div className="grid-wrapper">
-      {/* Grille des cases */}
-      <div className="grid">
-        {Array.from({ length: SIZE }, (_, row) => (
-          <div key={row} className="row">
-            {Array.from({ length: SIZE }, (_, col) => {
-              const isStart = path.length > 0 && path[0].x === col && path[0].y === row;
-              const isCurrent = position?.x === col && position?.y === row;
-              const isPath = path.some(p => p.x === col && p.y === row);
-
-              return (
-                <div key={col} className="cell-wrapper">
-                  <div
-                    className={`cell ${isStart ? "start" : isCurrent ? "current" : isPath ? "path" : ""}`}
-                    onClick={() => handleCellClick(col, row)}
-                  />
-                </div>
-              );
-            })}
+      {/* Lettres en haut des colonnes */}
+      <div className="column-labels">
+        <div className="empty-corner"></div> {/* Espace pour l'angle */}
+        {Array.from({ length: SIZE }, (_, col) => (
+          <div key={col} className="column-label">
+            {LETTERS[col]}
           </div>
         ))}
       </div>
 
-      {/* Overlay des numéros de secteur centrés */}
-      <div className="sector-overlay">
-        {Array.from({ length: 9 }, (_, i) => {
-          const row = Math.floor(i / 3);
-          const col = i % 3;
-          // Nouveau calcul avec CELL_SIZE = 60px
-          const centerX = col * BLOCK_SIZE * CELL_SIZE + (BLOCK_SIZE * CELL_SIZE) / 2;
-          const centerY = row * BLOCK_SIZE * CELL_SIZE + (BLOCK_SIZE * CELL_SIZE) / 2;
+      <div className="grid-and-row-labels">
+        {/* Chiffres à gauche des lignes */}
+        <div className="row-labels">
+          {Array.from({ length: SIZE }, (_, row) => (
+            <div key={row} className="row-label">
+              {row + 1}
+            </div>
+          ))}
+        </div>
 
-          return (
+        {/* Grille principale */}
+        <div className="grid">
+          {Array.from({ length: SIZE }, (_, row) => (
+            <div key={row} className="row">
+              {Array.from({ length: SIZE }, (_, col) => {
+                const isStart = path.length > 0 && path[0].x === col && path[0].y === row;
+                const isCurrent = position?.x === col && position?.y === row;
+                const isPath = path.some(p => p.x === col && p.y === row);
+
+                return (
+                  <div key={col} className="cell-wrapper">
+                    <div
+                      className={`cell ${isStart ? "start" : isCurrent ? "current" : isPath ? "path" : ""}`}
+                      onClick={() => handleCellClick(col, row)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+
+     {/* Overlay des numéros de secteur centrés */}
+    <div className="sector-overlay">
+        {Array.from({ length: 9 }, (_, i) => {
+            const row = Math.floor(i / 3);
+            const col = i % 3;
+            // Calcul précis du centre en incluant les bordures
+            const centerX = col * (BLOCK_SIZE * CELL_SIZE) + (BLOCK_SIZE * CELL_SIZE) / 2 + col * 3;
+            const centerY = row * (BLOCK_SIZE * CELL_SIZE) + (BLOCK_SIZE * CELL_SIZE) / 2 + row * 3;
+
+            return (
             <div
-              key={i}
-              className="sector-number"
-              style={{
+                key={i}
+                className="sector-number"
+                style={{
                 left: `${centerX}px`,
                 top: `${centerY}px`,
-              }}
+                }}
             >
-              {i + 1}
+                {i + 1}
             </div>
-          );
+            );
         })}
-      </div>
+        </div>
     </div>
   );
 };

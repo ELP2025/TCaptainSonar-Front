@@ -89,15 +89,63 @@
 
   .sector-number {
     position: absolute;
-    width: 100px; /* Augmenté pour mieux contenir le texte */
-    height: 100px;
-    font-size: 100px; /* Taille réduite pour mieux s'adapter */
+    width: 120px;
+    height: 120px;
+    font-size: 100px;
     font-weight: 900;
-    color: rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.15); /* Transparence ajustée */
     display: flex;
     justify-content: center;
     align-items: center;
-    transform: translate(-50%, -50%); /* Centrage précis */
-    margin-left: 0; /* Suppression du décalage manuel */
-    margin-top: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+    margin-left: 60px; /* Micro-ajustement */
+    margin-top: 25px;  /* Micro-ajustement */
+  }
+
+  /* Styles pour les labels de colonnes */
+.column-labels {
+    display: flex;
+    margin-left: -30px; /* Correspond à la largeur des row-labels */
+    position: relative;
+    left: 30px; /* Décalage pour centrer sur les colonnes */
+  }
+  
+  .column-label {
+    width: 60px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .empty-corner {
+    width: 60px;
+    height: 30px;
+  }
+  
+  /* Styles pour les labels de lignes */
+  .row-labels {
+    display: flex;
+    flex-direction: column;
+    margin-right: -5px;
+  }
+  
+  .row-label {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  /* Ajustement du conteneur principal */
+  .grid-and-row-labels {
+    display: flex;
+    position: relative;
   }
