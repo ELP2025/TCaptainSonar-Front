@@ -1,5 +1,5 @@
 // components/LoginForm.tsx
-import "nes.css/css/nes.min.css";
+
 import "../style/Login.css"
 
 interface LoginFormProps {

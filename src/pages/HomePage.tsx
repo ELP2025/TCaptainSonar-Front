@@ -1,5 +1,9 @@
+import History from "../components/History";
+
 function HomePage() {
-    return <p>home</p>
+    return <div>home
+        <History></History>
+    </div>
 }
 
 export default HomePage;
