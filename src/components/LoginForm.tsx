@@ -1,5 +1,6 @@
 // components/LoginForm.tsx
 import "nes.css/css/nes.min.css";
+import "../style/Login.css"
 
 interface LoginFormProps {
   error: string;
@@ -14,20 +15,21 @@ export function LoginForm({
   onSubmit,
 }: LoginFormProps) {
   return (
-    <form onSubmit={onSubmit}>
-      <input
+    <form onSubmit={onSubmit} className="nes-container with-title ">
+    <p className="title">Login</p>
+      <input className="nes-field"
         type="text"
         placeholder="Nom d'utilisateur"
         onChange={onUsernameChange}
         required
       />
-      <input
+      <input className="nes-field"
         type="password"
         placeholder="Mot de passe"
         onChange={onPasswordChange}
         required
       />
-    <button type="submit">Se connecter</button>
+    <button className="nes-btn" type="submit">Se connecter</button>
     </form>
   );
 }
