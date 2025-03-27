@@ -18,27 +18,26 @@ const Lobby: React.FC<LobbyProps> = ({
 
   return (
     <div className="lobby-container">
-      <h1>Captain Sonar - Lobby</h1>
-      <p>
-        {selectedRole 
-          ? `Vous avez sélectionné : ${selectedRole}` 
-          : "Choisissez votre rôle :"}
-      </p>
-      
-      <div className="roles-selection">
-        {availableRoles.map(role => (
-          <button
-            key={role}
-            onClick={() => handleRoleSelection(role)}
-            className={selectedRole === role ? 'selected' : ''}
-            aria-pressed={selectedRole === role} /* Accessibilité */
-            role="switch"
-          >
-            {role}
-          </button>
-        ))}
-      </div>
-    </div>
+  <h1>Captain Sonar Lobby</h1>
+  
+  <p>
+    {selectedRole 
+      ? `Vous avez sélectionné : ${selectedRole}` 
+      : "Choisissez votre rôle :"}
+  </p>
+  
+  <div className="roles-selection">
+    {availableRoles.map(role => (
+      <button
+        key={role}
+        className={`nes-btn ${selectedRole === role ? 'is-primary' : ''}`}
+        onClick={() => handleRoleSelection(role)}
+      >
+        {role}
+      </button>
+    ))}
+  </div>
+</div>
   );
 };
 
