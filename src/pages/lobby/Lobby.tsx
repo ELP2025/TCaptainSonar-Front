@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import './Lobby.css';
 import "nes.css/css/nes.min.css";
+import { io, Socket } from 'socket.io-client';
 
 // Type pour les props (permet de personnaliser les rôles)
 interface LobbyProps {
@@ -9,11 +10,44 @@ interface LobbyProps {
 
 const Lobby: React.FC<LobbyProps> = ({ 
   availableRoles = ["Capitaine", "Second", "Ingénieur", "Opérateur Radio"] 
-}) => {
+}) => { 
+
+
+
+
+    const [socket, setSocket] = useState<Socket | null>(null);
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:3000');
+    setSocket(newSocket);
+
+    newSocket.on('connect', () => {
+      console.log('Connected to the server');
+    });
+
+
+    newSocket.on('disconnect', () => {
+      console.log('Disconnected from the server');
+    });
+
+    return () => {
+      newSocket.close();
+    };
+  }, []);
+
+
+
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
   const handleRoleSelection = (role: string) => {
     setSelectedRole(prev => prev === role ? null : role);
+    sendMessage(role);
+  };
+    
+  const sendMessage = (role: string) => {
+    if (socket) {
+      socket.emit('role', role);
+    }
   };
 
   return (
