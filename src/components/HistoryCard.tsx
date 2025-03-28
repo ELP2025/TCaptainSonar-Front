@@ -1,5 +1,4 @@
 // components/PerformanceCard.tsx
-import { left } from '@popperjs/core';
 import React from 'react';
 
 interface Game {

@@ -69,7 +69,7 @@ function History() {
     if (loading) return <div>Chargement...</div>;
 
     return (
-        <div className="nes-container">
+        <div className="nes-container position-absolute top-0 start-0 end-0 bg-light ">
           <h2>Historique de {username}</h2>
           
           {performances.length === 0 ? (
