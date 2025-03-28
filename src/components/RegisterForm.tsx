@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-interface LoginFormProps {
+interface RegisterFormProps {
     onSuccess: () => void;
     onError: (error: string) => void;
-    switchToRegister: () => void;
+    switchToLogin: () => void;
 }
 
-export function LoginForm({ onSuccess, onError, switchToRegister }: LoginFormProps) {
+export function RegisterForm({ onSuccess, onError, switchToLogin }: RegisterFormProps) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -14,9 +14,9 @@ export function LoginForm({ onSuccess, onError, switchToRegister }: LoginFormPro
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        
+
         try {
-            const response = await fetch('http://localhost:3000/login', {
+            const response = await fetch('http://localhost:3000/api/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
@@ -25,13 +25,12 @@ export function LoginForm({ onSuccess, onError, switchToRegister }: LoginFormPro
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || 'Erreur de connexion');
+                throw new Error(data.message || "Erreur lors de l'inscription");
             }
 
-            document.cookie = `token=${data.token}; path=/; Secure; SameSite=Strict`;
             onSuccess();
         } catch (err) {
-            onError(err instanceof Error ? err.message : 'Erreur inconnue');
+            onError(err instanceof Error ? err.message : "Erreur inconnue lors de l'inscription");
         } finally {
             setIsLoading(false);
         }
@@ -39,12 +38,12 @@ export function LoginForm({ onSuccess, onError, switchToRegister }: LoginFormPro
 
     return (
         <div className="nes-container with-title" style={{ maxWidth: '500px', margin: '0 auto' }}>
-            <h2 className="title">Connexion</h2>
+            <h2 className="title">Inscription</h2>
             <form onSubmit={handleSubmit}>
-                <div className="nes-field" style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="username">Nom d'utilisateur</label>
+                <div className="nes-field " style={{ marginBottom: '1rem' }}>
+                    <label htmlFor="reg-username">Nom d'utilisateur</label>
                     <input
-                        id="username"
+                        id="reg-username"
                         type="text"
                         className="nes-input"
                         value={username}
@@ -52,11 +51,10 @@ export function LoginForm({ onSuccess, onError, switchToRegister }: LoginFormPro
                         required
                     />
                 </div>
-                
                 <div className="nes-field" style={{ marginBottom: '2rem' }}>
-                    <label htmlFor="password">Mot de passe</label>
+                    <label htmlFor="reg-password">Mot de passe</label>
                     <input
-                        id="password"
+                        id="reg-password"
                         type="password"
                         className="nes-input"
                         value={password}
@@ -67,10 +65,10 @@ export function LoginForm({ onSuccess, onError, switchToRegister }: LoginFormPro
 
                 <button 
                     type="submit" 
-                    className={`nes-btn is-primary ${isLoading ? 'is-disabled' : ''}`}
+                    className={`nes-btn is-success ${isLoading ? 'is-disabled' : ''}`}
                     disabled={isLoading}
                 >
-                    {isLoading ? 'Connexion...' : 'Se connecter'}
+                    {isLoading ? 'Inscription...' : 'S\'inscrire'}
                 </button>
             </form>
 
@@ -78,9 +76,9 @@ export function LoginForm({ onSuccess, onError, switchToRegister }: LoginFormPro
                 <button 
                     type="button" 
                     className="nes-btn"
-                    onClick={switchToRegister}
+                    onClick={switchToLogin}
                 >
-                    Pas de Compte ? S'inscrire
+                    Déjà un compte ? Se connecter
                 </button>
             </div>
         </div>
