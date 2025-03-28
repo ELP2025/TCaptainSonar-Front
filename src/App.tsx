@@ -17,7 +17,7 @@ function App() {
 
   return (
     <div>
-      {isAuthenticated ? <HomePage /> : <LoginPage setIsAuthenticated={setIsAuthenticated} />}
+      {isAuthenticated ? <HomePage setIsAuthenticated={setIsAuthenticated} /> : <LoginPage setIsAuthenticated={setIsAuthenticated} />}
     </div>
   );
 }
