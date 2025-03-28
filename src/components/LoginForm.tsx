@@ -15,21 +15,34 @@ export function LoginForm({
   onSubmit,
 }: LoginFormProps) {
   return (
-    <form onSubmit={onSubmit} className="nes-container with-title ">
-    <p className="title">Login</p>
-      <input className="nes-field"
-        type="text"
-        placeholder="Nom d'utilisateur"
-        onChange={onUsernameChange}
-        required
-      />
-      <input className="nes-field"
-        type="password"
-        placeholder="Mot de passe"
-        onChange={onPasswordChange}
-        required
-      />
-    <button className="nes-btn" type="submit">Se connecter</button>
-    </form>
+    <form onSubmit={onSubmit} className="nes-container with-title" style={{ maxWidth: '400px', margin: '0 auto' }}>
+    <h3 className="title">Login</h3>
+    
+    <div className="nes-field" style={{ marginBottom: '1.5rem' }}>
+        <input
+            type="text"
+            className="nes-input"
+            placeholder="Nom d'utilisateur"
+            onChange={onUsernameChange}
+            required
+        />
+    </div>
+    
+    <div className="nes-field" style={{ marginBottom: '2rem' }}>
+        <input
+            type="password"
+            className="nes-input"
+            placeholder="Mot de passe"
+            onChange={onPasswordChange}
+            required
+        />
+    </div>
+    
+    <div style={{ textAlign: 'center' }}>
+        <button className="nes-btn is-primary" type="submit" style={{ width: '100%' }}>
+            Se connecter
+        </button>
+    </div>
+</form>
   );
 }

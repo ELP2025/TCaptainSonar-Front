@@ -31,7 +31,10 @@ interface LoginPageProps {
           }
       };
   
-      return <LoginForm error="" onSubmit={handleLogin} onPasswordChange={(e) => setPassword(e.target.value)} onUsernameChange={(e) => setUsername(e.target.value)}/>
+      return <div>
+                <LoginForm error="" onSubmit={handleLogin} onPasswordChange={(e) => setPassword(e.target.value)} onUsernameChange={(e) => setUsername(e.target.value)}/>
+                <span className="nes-text is-error">{error}</span>
+            </div>
   }
 
 export default LoginPage; 
