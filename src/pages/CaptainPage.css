@@ -1,26 +1,33 @@
 .captain-page {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: #f0f8ff;
-    min-height: 100vh;
-    padding: 20px;
-    text-align: center;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;  /* ✅ espace entre les sections */
+  height: 100vh;                   /* ✅ tient exactement sur l'écran */
+  width: 100vw;
+  background-color: #f0f8ff;
+  padding: 10px 0;
+  box-sizing: border-box;
+  overflow: hidden;                /* ✅ évite les scrolls */
+}
+
+
 
   .title {
     flex-direction: column;
+    display: flex;
   }
   
   .captain-page h1 {
     color: #003b5a;
     font-size: 28px;
-    margin-bottom: 20px;
     text-transform: uppercase;
     display: flex;
     align-items: center;
     gap: 10px;
     font-weight: bold;
+    margin-top: 50px;
+    margin-right: 200px;
   }
   
   .captain-page p {
@@ -33,21 +40,29 @@
     margin-top: 20px;
     display: flex;
     gap: 10px;
+    background: none;
+    align-items: center;
+    justify-content: center;
   }
   
   .control-panel button {
-    padding: 12px 18px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
+    width: 200px;            /* ✅ Taille fixe */
+    height: 40px;            /* ✅ Hauteur fixe */
+    font-size: 14px;
+    padding: 6px 12px;
+    font-weight: 500;
+    border-radius: 4px;
     background-color: #0077aa;
     color: white;
-    border-radius: 6px;
+    border: none;
     cursor: pointer;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.2s;
-    margin-right: 100px;
+    transition: background-color 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 100px;
   }
+  
   
   .control-panel button:hover {
     background-color: #005577;

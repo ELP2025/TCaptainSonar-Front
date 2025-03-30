@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MapGrid from "../components/MapGrid"; // Adjust path based on your structure
+import ImageMap from "../components/ImageMap";
 import "./CaptainPage.css";
 
 type Coord = {
@@ -31,27 +31,31 @@ const CaptainPage: React.FC = () => {
   return (
     <div className="captain-page">
         <div className="title">
-            <h1>🧭 Interface Capitaine</h1>
-            <p>
-                {isConfirmed && startPosition
-                ? `Sous-marin positionné en ${String.fromCharCode(65 + startPosition.x)}${startPosition.y + 1}`
-                : "Choisissez la position initiale du sous-marin"}
-            </p>
+            <h1>{isConfirmed && startPosition
+                ? `📍 Sous-marin positionné en ${String.fromCharCode(65 + startPosition.x)}${startPosition.y + 1}📍`
+                : "🧭Choisissez la position initiale du sous-marin🧭"}</h1>
         </div>
-
-        <MapGrid
-            onSelectStart={handleSelectStart}
-            startPosition={startPosition}
-            isConfirmed={isConfirmed}
-            onReset={handleReset}
-        />
-
+        
         <div className="control-panel">
-            {!isConfirmed && startPosition && (
-            <button onClick={handleConfirm}>Confirmer la position</button>
-            )}
-            {isConfirmed && (
-            <button onClick={handleReset}>Réinitialiser</button>
+            <ImageMap
+                onSelectStart={handleSelectStart}
+                startPosition={startPosition}
+                isConfirmed={isConfirmed}
+                onReset={handleReset}
+            />
+            {isConfirmed ? (
+              <button onClick={handleReset}>Réinitialiser</button>
+            ) : (
+              <button
+                onClick={handleConfirm}
+                disabled={!startPosition} // ✅ empêche clic si rien sélectionné
+                style={{
+                  opacity: startPosition ? 1 : 0.5,
+                  cursor: startPosition ? "pointer" : "not-allowed"
+                }}
+              >
+                Confirmer la position
+              </button>
             )}
         </div>
     </div>
