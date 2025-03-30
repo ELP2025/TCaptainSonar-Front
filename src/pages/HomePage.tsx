@@ -1,6 +1,7 @@
 import { useState } from "react";
 import History from "../components/History";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 interface HomePageProps {
     setIsAuthenticated: (value: boolean) => void;
@@ -9,9 +10,10 @@ interface HomePageProps {
 
 function HomePage({ setIsAuthenticated }: HomePageProps) {
     const [showHistory, setShowHistory] = useState(false);
-
+    const navigate = useNavigate();
     function disconnect(): void {
         Cookies.remove("token");
+        navigate('/login');
         setIsAuthenticated(false);
     }
 

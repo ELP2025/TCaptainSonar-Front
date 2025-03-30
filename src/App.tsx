@@ -3,6 +3,7 @@ import './App.css';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import Cookies from 'js-cookie';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 
 function App() {
@@ -16,9 +17,13 @@ function App() {
   }, []);
 
   return (
-    <div>
-      {isAuthenticated ? <HomePage setIsAuthenticated={setIsAuthenticated} /> : <LoginPage setIsAuthenticated={setIsAuthenticated} />}
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/home" element={<HomePage setIsAuthenticated={setIsAuthenticated}/>} />
+        <Route path="*" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

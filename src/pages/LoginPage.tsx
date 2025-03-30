@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LoginForm } from '../components/LoginForm';
 import { RegisterForm } from '../components/RegisterForm';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginPageProps {
     setIsAuthenticated: (value: boolean) => void;
@@ -9,10 +10,12 @@ interface LoginPageProps {
 function LoginPage({ setIsAuthenticated }: LoginPageProps) {
     const [isLoginMode, setIsLoginMode] = useState(true);
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleAuthSuccess = () => {
         setError('');
         setIsAuthenticated(true);
+        navigate('/home');
     };
 
     const handleAuthError = (errorMessage: string) => {
