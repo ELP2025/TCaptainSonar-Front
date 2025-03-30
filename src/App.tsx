@@ -4,26 +4,26 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import Cookies from 'js-cookie';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
 
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
-      setIsAuthenticated(true);
-    }
-  }, []);
 
   return (
+    <AuthProvider>
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
-        <Route path="/home" element={<HomePage setIsAuthenticated={setIsAuthenticated}/>} />
-        <Route path="*" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/home" element={
+          <ProtectedRoute>
+            <HomePage  />
+          </ProtectedRoute>
+        } />        <Route path="*" element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 

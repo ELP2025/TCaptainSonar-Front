@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 interface LoginFormProps {
     onSuccess: () => void;
@@ -11,7 +12,7 @@ export function LoginForm({ onSuccess, onError, switchToRegister }: LoginFormPro
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
+    const { login } = useAuth();
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -28,8 +29,7 @@ export function LoginForm({ onSuccess, onError, switchToRegister }: LoginFormPro
             if (!response.ok) {
                 throw new Error(data.message || 'Erreur de connexion');
             }
-
-            document.cookie = `token=${data.token}; path=/; Secure; SameSite=Strict`;
+            login(data.token)
             onSuccess();
         } catch (err) {
             onError(err instanceof Error ? err.message : 'Erreur inconnue');

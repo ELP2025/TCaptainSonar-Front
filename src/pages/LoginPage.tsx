@@ -3,18 +3,13 @@ import { LoginForm } from '../components/LoginForm';
 import { RegisterForm } from '../components/RegisterForm';
 import { useNavigate } from 'react-router-dom';
 
-interface LoginPageProps {
-    setIsAuthenticated: (value: boolean) => void;
-}
-
-function LoginPage({ setIsAuthenticated }: LoginPageProps) {
+function LoginPage() {
     const [isLoginMode, setIsLoginMode] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleAuthSuccess = () => {
         setError('');
-        setIsAuthenticated(true);
         navigate('/home');
     };
 
