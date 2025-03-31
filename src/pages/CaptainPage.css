@@ -39,11 +39,11 @@
   .control-panel {
     margin-top: 20px;
     display: flex;
-    gap: 10px;
+    gap: 30px;
     background: none;
     align-items: center;
     justify-content: center;
-  }
+  }  
   
   .control-panel button {
     width: 200px;            /* ✅ Taille fixe */
@@ -65,5 +65,42 @@
   
   
   .control-panel button:hover {
+    background-color: #005577;
+  }
+
+  .movement-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .movement-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .horizontal-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .movement-buttons button {
+    width: 80px;
+    height: 40px;
+    font-size: 14px;
+    padding: 6px 12px;
+    font-weight: 500;
+    border-radius: 4px;
+    background-color: #0077aa;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .movement-buttons button:hover {
     background-color: #005577;
   }

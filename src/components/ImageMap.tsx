@@ -11,6 +11,9 @@ type ImageMapProps = {
   startPosition: Coord | null;
   isConfirmed: boolean;
   onReset: () => void;
+  onMove: (direction: string) => void;
+  path: Coord[];
+  currentPosition: Coord | null;
 };
 
 const SIZE = 15;
@@ -60,36 +63,26 @@ const ISLANDS: Coord[] = [
   { x: 13, y: 13 }, // N14
 ];
 
-const ImageMap: React.FC<ImageMapProps> = ({ onSelectStart, startPosition, isConfirmed, onReset }) => {
-  const [path, setPath] = useState<Coord[]>(startPosition ? [startPosition] : []);
-  const [position, setPosition] = useState<Coord | null>(startPosition);
-
+const ImageMap: React.FC<ImageMapProps> = ({ 
+  onSelectStart, 
+  startPosition, 
+  isConfirmed, 
+  onReset,
+  onMove,
+  path,
+  currentPosition
+}) => {
   const handleCellClick = (x: number, y: number) => {
     const isIsland = ISLANDS.some((p) => p.x === x && p.y === y);
     if (isIsland || isConfirmed) return;
 
     const newPos = { x, y };
-    setPosition(newPos);
-    setPath([newPos]);
     onSelectStart(newPos);
-  };
-
-  const resetMap = () => {
-    setPath([]);
-    setPosition(null);
-    onReset();
   };
 
   return (
     <div className="image-map-wrapper">
-      <div className="column-labels">
-        <div className="empty-corner"></div>
-        {Array.from({ length: SIZE }, (_, col) => (
-          <div key={col} className="column-label">
-            {LETTERS[col]}
-          </div>
-        ))}
-      </div>
+      {/* ... (garder le même code pour les labels) */}
 
       <div className="grid-and-row-labels">
         <div className="row-labels">
@@ -102,12 +95,12 @@ const ImageMap: React.FC<ImageMapProps> = ({ onSelectStart, startPosition, isCon
 
         <div className="image-grid">
           <img src="/assets/map2" alt="Alpha Map" className="background-map" />
-        <div className="overlay-grid">
+          <div className="overlay-grid">
             {Array.from({ length: SIZE }, (_, row) => (
               <div key={row} className="row">
                 {Array.from({ length: SIZE }, (_, col) => {
                   const isStart = path.length > 0 && path[0].x === col && path[0].y === row;
-                  const isCurrent = position?.x === col && position?.y === row;
+                  const isCurrent = currentPosition?.x === col && currentPosition?.y === row;
                   const isPath = path.some((p) => p.x === col && p.y === row);
                   const isIsland = ISLANDS.some((p) => p.x === col && p.y === row);
 
@@ -119,7 +112,7 @@ const ImageMap: React.FC<ImageMapProps> = ({ onSelectStart, startPosition, isCon
                         }`}
                         onClick={() => handleCellClick(col, row)}
                       >
-                        {isStart && <span className="submarine">🛥️</span>}
+                        {isCurrent && <span className="submarine">🛥️</span>}
                       </div>
                     </div>
                   );

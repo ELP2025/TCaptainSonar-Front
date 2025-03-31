@@ -10,10 +10,14 @@ type Coord = {
 const CaptainPage: React.FC = () => {
   const [startPosition, setStartPosition] = useState<Coord | null>(null);
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const [path, setPath] = useState<Coord[]>([]);
+  const [currentPosition, setCurrentPosition] = useState<Coord | null>(null);
 
   const handleSelectStart = (coord: Coord) => {
     if (!isConfirmed) {
       setStartPosition(coord);
+      setPath([coord]);
+      setCurrentPosition(coord);
     }
   };
 
@@ -26,40 +30,141 @@ const CaptainPage: React.FC = () => {
   const handleReset = () => {
     setStartPosition(null);
     setIsConfirmed(false);
+    setPath([]);
+    setCurrentPosition(null);
+  };
+
+  const handleMove = (direction: string) => {
+    if (!currentPosition) return;
+  
+    const newPosition = { ...currentPosition };
+    
+    switch (direction) {
+      case "north":
+        if (newPosition.y > 0) newPosition.y -= 1;
+        break;
+      case "east":
+        if (newPosition.x < 14) newPosition.x += 1;
+        break;
+      case "south":
+        if (newPosition.y < 14) newPosition.y += 1;
+        break;
+      case "west":
+        if (newPosition.x > 0) newPosition.x -= 1;
+        break;
+    }
+  
+    // Vérifier si la nouvelle position est valide
+    const isIsland = ISLANDS.some(p => p.x === newPosition.x && p.y === newPosition.y);
+    const isAlreadyVisited = path.some(p => p.x === newPosition.x && p.y === newPosition.y);
+    
+    // Ne pas bouger si:
+    // - C'est une île
+    // - Déjà visité
+    // - La position n'a pas changé (bordure de la carte)
+    if (!isIsland && !isAlreadyVisited && 
+        (newPosition.x !== currentPosition.x || newPosition.y !== currentPosition.y)) {
+      setCurrentPosition(newPosition);
+      setPath([...path, newPosition]);
+    } else if (isIsland) {
+      // Optionnel: Afficher un message d'alerte
+      alert("Attention ! Vous ne pouvez pas naviguer sur une île !");
+    }
   };
 
   return (
     <div className="captain-page">
-        <div className="title">
-            <h1>{isConfirmed && startPosition
-                ? `📍 Sous-marin positionné en ${String.fromCharCode(65 + startPosition.x)}${startPosition.y + 1}📍`
-                : "🧭 Choisir la position initiale du sous-marin 🧭"}</h1>
-        </div>
+      <div className="title">
+        <h1>
+          {isConfirmed && currentPosition
+            ? `📍 Sous-marin positionné en ${String.fromCharCode(65 + currentPosition.x)}${currentPosition.y + 1}📍`
+            : "🧭 Choisir la position initiale du sous-marin 🧭"}
+        </h1>
+      </div>
+      
+      <div className="control-panel">
+        <ImageMap
+          onSelectStart={handleSelectStart}
+          startPosition={startPosition}
+          isConfirmed={isConfirmed}
+          onReset={handleReset}
+          onMove={handleMove}
+          path={path}
+          currentPosition={currentPosition}
+        />
         
-        <div className="control-panel">
-            <ImageMap
-                onSelectStart={handleSelectStart}
-                startPosition={startPosition}
-                isConfirmed={isConfirmed}
-                onReset={handleReset}
-            />
-            {isConfirmed ? (
+        <div className="movement-controls">
+          {isConfirmed ? (
+            <>
+              <div className="movement-buttons">
+                <button onClick={() => handleMove("north")}>Nord</button>
+                <div className="horizontal-buttons">
+                  <button onClick={() => handleMove("west")}>Ouest</button>
+                  <button onClick={() => handleMove("east")}>Est</button>
+                </div>
+                <button onClick={() => handleMove("south")}>Sud</button>
+              </div>
               <button onClick={handleReset}>Réinitialiser</button>
-            ) : (
-              <button
-                onClick={handleConfirm}
-                disabled={!startPosition} // ✅ empêche clic si rien sélectionné
-                style={{
-                  opacity: startPosition ? 1 : 0.5,
-                  cursor: startPosition ? "pointer" : "not-allowed"
-                }}
-              >
-                Confirmer la position
-              </button>
-            )}
+            </>
+          ) : (
+            <button
+              onClick={handleConfirm}
+              disabled={!startPosition}
+              style={{
+                opacity: startPosition ? 1 : 0.5,
+                cursor: startPosition ? "pointer" : "not-allowed"
+              }}
+            >
+              Confirmer la position
+            </button>
+          )}
         </div>
+      </div>
     </div>
   );
 };
+
+const ISLANDS: Coord[] = [
+  // Secteur 1 (A1-E5)
+  { x: 2, y: 1 }, // C2
+  { x: 2, y: 2 }, // C3
+  // Secteur 2 (F1-J5)
+  { x: 6, y: 1 }, // G2
+  { x: 8, y: 2 }, // I3
+  { x: 8, y: 3 }, // I4
+  // Secteur 3 (K1-O5)
+  { x: 13, y: 1 }, // N2
+  { x: 12, y: 1 }, // M2
+  { x: 12, y: 2 }, // M3
+  // Secteur 4 (A6-E10)
+  { x: 1, y: 6 }, // B7
+  { x: 1, y: 7 }, // B8
+  { x: 3, y: 6 }, // D7
+  { x: 3, y: 7 }, // D8
+  { x: 3, y: 8 }, // D9
+  // Secteur 5 (F6-J10)
+  { x: 6, y: 6 }, // G7
+  { x: 6, y: 7 }, // G8
+  { x: 7, y: 8 }, // H9
+  { x: 8, y: 6 }, // I7
+  // Secteur 6 (K6-O10)
+  { x: 11, y: 8 }, // L9  
+  { x: 12, y: 8 }, // M9
+  { x: 13, y: 8 }, // N9
+  // Secteur 7 (A11-E15)
+  { x: 3, y: 10 }, // D11
+  { x: 2, y: 11 }, // C12
+  { x: 0, y: 12 }, // A13
+  { x: 2, y: 13 }, // C14
+  { x: 3, y: 14 }, // D15
+  // Secteur 8 (F11-J15)
+  { x: 7, y: 11 }, // H12
+  { x: 6, y: 13 }, // G14
+  { x: 8, y: 13 }, // I14
+  // Secteur 9 (K11-O15)
+  { x: 11, y: 11 }, // L12
+  { x: 12, y: 12 }, // M13
+  { x: 13, y: 13 }, // N14
+];
 
 export default CaptainPage;

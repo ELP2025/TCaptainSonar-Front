@@ -46,11 +46,11 @@
   }
   
   .cell.current {
-    background-color: rgba(33, 150, 243, 0.5); /* Bleu semi-transparent pour la position actuelle */
+    background-color: rgba(211, 47, 47, 0.5); /* Rouge semi-transparent pour la position de départ */
   }
   
   .cell.path {
-    background-color: rgba(144, 202, 249, 0.5); /* Bleu clair semi-transparent pour le chemin */
+    background-color: rgba(211, 47, 47, 0.5); /* Rouge semi-transparent pour la position de départ */
   }
   
   .cell:hover {
