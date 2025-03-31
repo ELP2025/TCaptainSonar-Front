@@ -84,6 +84,7 @@
     font-weight: bold;
     justify-content: center;
     align-items: center;
+    display: flex;
   }
 
   .empty-corner {
@@ -104,6 +105,8 @@
   font-weight: bold;
   justify-content: center;
   align-items: center;
+  display: flex;
+  margin-right: 10px;
 }
   
   /* Ajustement du conteneur principal */

@@ -33,7 +33,7 @@ const CaptainPage: React.FC = () => {
         <div className="title">
             <h1>{isConfirmed && startPosition
                 ? `📍 Sous-marin positionné en ${String.fromCharCode(65 + startPosition.x)}${startPosition.y + 1}📍`
-                : "🧭Choisissez la position initiale du sous-marin🧭"}</h1>
+                : "🧭 Choisir la position initiale du sous-marin 🧭"}</h1>
         </div>
         
         <div className="control-panel">
