@@ -1,0 +1,61 @@
+/*
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #007bff;
+    cursor: pointer;
+    transition: all 0.3s ease; 
+}
+
+
+button:active {
+    transform: scale(0.98);
+}
+
+button.selected {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+button.selected[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+*/
+.lobby-container {
+    max-width: 900px; /* Ajout de px */
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    min-height: 100vh; /* Prend toute la hauteur d'écran */
+    display: flex; /* Centrage vertical */
+    flex-direction: column; /* Alignement vertical */
+    justify-content: center; /* Centre le contenu verticalement */
+    align-items: center; /* Centre horizontalement */
+
+    width: 100%;
+}
+
+.roles-selection {
+    display: flex;
+    justify-content: center;
+    gap: 8px; /* Espacement entre les boutons */
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+/* Style NES personnalisé pour les boutons */
+.nes-btn {
+    margin: 4px; /* Marge externe supplémentaire */
+    min-width: 180px; /* Largeur minimum fixe */
+    padding: 12px 0; /* Padding vertical plus important */
+}
+
+button:hover {
+    background-color: #007bff20; 
+}
+
