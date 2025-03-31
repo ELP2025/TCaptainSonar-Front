@@ -1,23 +1,10 @@
 import { useState } from "react";
 import History from "../components/History";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-
-interface HomePageProps {
-    setIsAuthenticated: (value: boolean) => void;
-}
+import DisconnectButton from "../components/DisconnectButton";
 
 
 function HomePage() {
-    const [showHistory, setShowHistory] = useState(false);
-    const navigate = useNavigate();
-    const {logout} = useAuth();
-    function disconnect(): void {
-        logout();
-        navigate('/login');
-    }
-
+    const [showHistory, setShowHistory] = useState(false);    
     return (
         <div style={{ position: 'relative', minHeight: '100vh' }}>
             <div className="nes-container">
@@ -32,12 +19,7 @@ function HomePage() {
                 >
                     {showHistory ? 'Masquer' : 'Afficher'} l'Historique
                 </button>
-                <button
-                    className="nes-btn is-warning"
-                    onClick={() => disconnect()}
-                >
-                    Déconnexion
-                </button>
+                <DisconnectButton/>
             </div>
 
             {showHistory && <History />}

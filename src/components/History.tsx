@@ -43,8 +43,6 @@ function History() {
                 const decoded = jwtDecode<JwtPayload>(token);
                 console.log("Username décodé:", decoded.username);
                 setUsername(decoded.username); // ← Ici on met à jour l'état
-                
-                // Si tu veux aussi récupérer les jeux :
                 fetchGames(decoded.id); 
             } catch (err) {
                 console.error("Erreur de décodage:", err);
@@ -58,6 +56,7 @@ function History() {
                 const response = await fetch(`http://localhost:3000/api/performances/user/${userId}`);
                 const data = await response.json();
                 setPerformances(data); // Ou traite les données selon ton besoin
+                console.log(performances)
             } catch (err) {
                 console.error("Erreur fetch games:", err);
             }
