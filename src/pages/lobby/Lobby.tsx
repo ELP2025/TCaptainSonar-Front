@@ -40,11 +40,12 @@ const Lobby: React.FC<LobbyProps> = ({
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
   const handleRoleSelection = (role: string) => {
-    setSelectedRole(prev => prev === role ? null : role);
-    sendMessage(role);
+    const newRole = selectedRole === role ? null : role;
+    setSelectedRole(newRole);
+    sendMessage(newRole); 
   };
     
-  const sendMessage = (role: string) => {
+  const sendMessage = (role: string | null) => {
     if (socket) {
       socket.emit('role', role);
     }
