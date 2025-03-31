@@ -1,8 +1,8 @@
 .image-map-wrapper {
-    position: relative;
-    width: fit-content;
-    margin: auto;
-  }
+  position: relative;
+  width: 80vh; /* Taille fixe basée sur la hauteur */
+  margin: 0 auto; /* Centrage horizontal */
+}
   
   .background-map {
     width: 80vh;

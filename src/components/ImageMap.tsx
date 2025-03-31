@@ -82,8 +82,15 @@ const ImageMap: React.FC<ImageMapProps> = ({
 
   return (
     <div className="image-map-wrapper">
-      {/* ... (garder le même code pour les labels) */}
-
+      {/* Labels des colonnes (A-O) */}
+      <div className="column-labels">
+        <div className="empty-corner"></div>
+        {Array.from({ length: SIZE }, (_, col) => (
+          <div key={col} className="column-label">
+            {LETTERS[col]}
+          </div>
+        ))}
+      </div>
       <div className="grid-and-row-labels">
         <div className="row-labels">
           {Array.from({ length: SIZE }, (_, row) => (

@@ -45,9 +45,12 @@
     display: flex;
     gap: 30px;
     background: none;
-    align-items: center;
+    align-items: flex-start; /* Alignement en haut */
     justify-content: center;
-  }  
+    width: 100%;
+    max-width: 1200px; /* Ou la largeur maximale souhaitée */
+    margin-left: -300px;
+  } 
   
   .control-panel button {
     width: 200px;            /* ✅ Taille fixe */
@@ -72,11 +75,16 @@
     background-color: #005577;
   }
 
+  /* DÉPLACEMENT*/
+
   .movement-controls {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    width: 200px; /* Largeur fixe */
+    flex-shrink: 0; /* Empêche le rétrécissement */
+    margin-top: 100px;
   }
 
   .movement-buttons {
@@ -89,6 +97,8 @@
   .horizontal-buttons {
     display: flex;
     gap: 10px;
+    justify-content: center;
+    width: 100%;
   }
   
   .movement-buttons button {
@@ -137,6 +147,7 @@
     flex-direction: column;
     overflow: hidden; /* Cache le dépassement */
     margin-left: 100px;
+    margin-top: 100px;
     height: 230px; /* Hauteur fixe pour 5 messages */
   }
   

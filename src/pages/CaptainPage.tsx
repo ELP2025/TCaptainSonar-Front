@@ -52,10 +52,10 @@ const CaptainPage: React.FC = () => {
 
   const directionToFrench = (dir: string) => {
     switch(dir) {
-      case "north": return "Nord";
-      case "south": return "Sud";
-      case "east": return "Est";
-      case "west": return "Ouest";
+      case "north": return "NORD";
+      case "south": return "SUD";
+      case "east": return "EST";
+      case "west": return "OUEST";
       default: return dir;
     }
   };
@@ -141,12 +141,12 @@ const CaptainPage: React.FC = () => {
               {isConfirmed ? (
                 <>
                   <div className="movement-buttons">
-                    <button onClick={() => handleMove("north")}>Nord</button>
+                    <button onClick={() => handleMove("north")}>NORD</button>
                     <div className="horizontal-buttons">
-                      <button onClick={() => handleMove("west")}>Ouest</button>
-                      <button onClick={() => handleMove("east")}>Est</button>
+                      <button onClick={() => handleMove("west")}>OUEST</button>
+                      <button onClick={() => handleMove("east")}>EST</button>
                     </div>
-                    <button onClick={() => handleMove("south")}>Sud</button>
+                    <button onClick={() => handleMove("south")}>SUD</button>
                   </div>
                   <button onClick={handleReset}>Réinitialiser</button>
                 </>
