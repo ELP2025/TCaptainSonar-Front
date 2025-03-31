@@ -25,37 +25,40 @@ button.selected[aria-disabled="true"] {
     cursor: not-allowed;
 }
 */
-.lobby-container {
-    max-width: 900px; /* Ajout de px */
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-    font-family: 'Press Start 2P', cursive;
-    min-height: 100vh; /* Prend toute la hauteur d'écran */
-    display: flex; /* Centrage vertical */
-    flex-direction: column; /* Alignement vertical */
-    justify-content: center; /* Centre le contenu verticalement */
-    align-items: center; /* Centre horizontalement */
-
+/* Lobby.css */
+.teams-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
     width: 100%;
-}
-
-.roles-selection {
-    display: flex;
-    justify-content: center;
-    gap: 8px; /* Espacement entre les boutons */
-    margin-top: 20px;
-    flex-wrap: wrap;
-}
-
-/* Style NES personnalisé pour les boutons */
-.nes-btn {
-    margin: 4px; /* Marge externe supplémentaire */
-    min-width: 180px; /* Largeur minimum fixe */
-    padding: 12px 0; /* Padding vertical plus important */
-}
-
-button:hover {
-    background-color: #007bff20; 
-}
-
+    max-width: 1200px;
+    margin-top: 2rem;
+  }
+  
+  .team-section {
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  
+  .blue-team {
+    background-color: rgba(0, 123, 255, 0.1);
+    border: 3px solid #007bff;
+  }
+  
+  .red-team {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 3px solid #dc3545;
+  }
+  
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .nes-btn.is-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
