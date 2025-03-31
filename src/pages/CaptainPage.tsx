@@ -18,12 +18,32 @@ const CaptainPage: React.FC = () => {
   const [path, setPath] = useState<Coord[]>([]);
   const [currentPosition, setCurrentPosition] = useState<Coord | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [isBlocked, setIsBlocked] = useState(false);
   const MAX_MESSAGES = 5;
 
   const addChatMessage = (text: string, isSystem: boolean = false) => {
     setChatMessages(prev => {
       const newMessages = [...prev, { text, isSystem }];
       return newMessages.slice(-MAX_MESSAGES);
+    });
+  };
+
+  const checkIfCompletelyBlocked = (position: Coord): boolean => {
+    const directions = [
+      { x: 0, y: -1 },  // NORD
+      { x: 1, y: 0 },   // EST
+      { x: 0, y: 1 },   // SUD
+      { x: -1, y: 0 }   // OUEST
+    ];
+
+    return directions.every(dir => {
+      const newX = position.x + dir.x;
+      const newY = position.y + dir.y;
+      
+      if (newX < 0 || newX >= 15 || newY < 0 || newY >= 15) return true;
+      
+      return ISLANDS.some(p => p.x === newX && p.y === newY) || 
+             path.some(p => p.x === newX && p.y === newY);
     });
   };
 
@@ -48,6 +68,7 @@ const CaptainPage: React.FC = () => {
     setPath([]);
     setCurrentPosition(null);
     setChatMessages([]);
+    setIsBlocked(false);
   };
 
   const directionToFrench = (dir: string) => {
@@ -58,6 +79,12 @@ const CaptainPage: React.FC = () => {
       case "west": return "OUEST";
       default: return dir;
     }
+  };
+
+  const handleBlackout = () => {
+    setPath(path.length > 0 ? [path[path.length - 1]] : []);
+    setIsBlocked(false);
+    addChatMessage("BLACKOUT effectué", true);
   };
 
   const handleMove = (direction: string) => {
@@ -98,8 +125,19 @@ const CaptainPage: React.FC = () => {
     
     if (moved && !isIsland && !isAlreadyVisited) {
       setCurrentPosition(newPosition);
-      setPath([...path, newPosition]);
+      const newPath = [...path, newPosition];
+      setPath(newPath);
       addChatMessage(`Déplacement vers ${directionToFrench(direction)}`);
+      
+      if (checkIfCompletelyBlocked(newPosition)) {
+        setIsBlocked(true);
+      }
+    } else {
+      
+      // Vérifie si complètement bloqué après ce mouvement impossible
+      if (checkIfCompletelyBlocked(currentPosition)) {
+        setIsBlocked(true);
+      }
     }
   };
 
@@ -108,8 +146,8 @@ const CaptainPage: React.FC = () => {
       <div className="title">
         <h1>
           {isConfirmed && currentPosition
-            ? `📍 Sous-marin positionné en ${String.fromCharCode(65 + currentPosition.x)}${currentPosition.y + 1}📍`
-            : "🧭 Choisir la position initiale du sous-marin 🧭"}
+            ? `📍 Sous-marin en ${String.fromCharCode(65 + currentPosition.x)}${currentPosition.y + 1}📍`
+            : "🧭 Choisir position initiale 🧭"}
         </h1>
       </div>
       
@@ -148,16 +186,19 @@ const CaptainPage: React.FC = () => {
                     </div>
                     <button onClick={() => handleMove("south")}>SUD</button>
                   </div>
+                  <button 
+                    onClick={handleBlackout}
+                    className={`blackout-btn ${isBlocked ? "blocked" : ""}`}
+                  >
+                    {isBlocked ? "BLACKOUT (OBLIGATOIRE)" : "BLACKOUT"}
+                  </button>
                   <button onClick={handleReset}>Réinitialiser</button>
                 </>
               ) : (
                 <button
                   onClick={handleConfirm}
                   disabled={!startPosition}
-                  style={{
-                    opacity: startPosition ? 1 : 0.5,
-                    cursor: startPosition ? "pointer" : "not-allowed"
-                  }}
+                  className={!startPosition ? "disabled-btn" : ""}
                 >
                   Confirmer la position
                 </button>
@@ -169,8 +210,6 @@ const CaptainPage: React.FC = () => {
     </div>
   );
 };
-
-
 
 const ISLANDS: Coord[] = [
   // Secteur 1 (A1-E5)

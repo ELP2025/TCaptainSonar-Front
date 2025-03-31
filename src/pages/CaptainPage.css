@@ -75,6 +75,36 @@
     background-color: #005577;
   }
 
+  .disabled-btn {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    background-color: #cccccc !important;
+  }
+  
+  .blackout-btn {
+    background-color: #0077aa;
+    color: white;
+    transition: all 0.3s;
+    width: 200px;
+    height: 40px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    margin-top: 100px;
+  }
+  
+  .blackout-btn.blocked {
+    background-color: #ff5252;
+    animation: pulse 1.5s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
   /* DÉPLACEMENT*/
 
   .movement-controls {

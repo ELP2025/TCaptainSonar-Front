@@ -73,9 +73,9 @@
   /* Styles pour les labels de colonnes */
   .column-labels {
     display: flex;
-    margin-left: -30px; /* Correspond à la largeur des row-labels */
+    margin-left: -50px; /* Correspond à la largeur des row-labels */
     position: relative;
-    left: 30px; /* Décalage pour centrer sur les colonnes */
+    left: 50px; /* Décalage pour centrer sur les colonnes */
   }
   
   .column-label {
