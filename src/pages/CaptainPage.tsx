@@ -7,11 +7,25 @@ type Coord = {
   y: number;
 };
 
+type ChatMessage = {
+  text: string;
+  isSystem?: boolean;
+};
+
 const CaptainPage: React.FC = () => {
   const [startPosition, setStartPosition] = useState<Coord | null>(null);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [path, setPath] = useState<Coord[]>([]);
   const [currentPosition, setCurrentPosition] = useState<Coord | null>(null);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const MAX_MESSAGES = 5;
+
+  const addChatMessage = (text: string, isSystem: boolean = false) => {
+    setChatMessages(prev => {
+      const newMessages = [...prev, { text, isSystem }];
+      return newMessages.slice(-MAX_MESSAGES);
+    });
+  };
 
   const handleSelectStart = (coord: Coord) => {
     if (!isConfirmed) {
@@ -24,6 +38,7 @@ const CaptainPage: React.FC = () => {
   const handleConfirm = () => {
     if (startPosition) {
       setIsConfirmed(true);
+      addChatMessage("Position confirmée. Prêt à naviguer !", true);
     }
   };
 
@@ -32,43 +47,59 @@ const CaptainPage: React.FC = () => {
     setIsConfirmed(false);
     setPath([]);
     setCurrentPosition(null);
+    setChatMessages([]);
+  };
+
+  const directionToFrench = (dir: string) => {
+    switch(dir) {
+      case "north": return "Nord";
+      case "south": return "Sud";
+      case "east": return "Est";
+      case "west": return "Ouest";
+      default: return dir;
+    }
   };
 
   const handleMove = (direction: string) => {
     if (!currentPosition) return;
-  
+
     const newPosition = { ...currentPosition };
+    let moved = false;
     
     switch (direction) {
       case "north":
-        if (newPosition.y > 0) newPosition.y -= 1;
+        if (newPosition.y > 0) {
+          newPosition.y -= 1;
+          moved = true;
+        }
         break;
       case "east":
-        if (newPosition.x < 14) newPosition.x += 1;
+        if (newPosition.x < 14) {
+          newPosition.x += 1;
+          moved = true;
+        }
         break;
       case "south":
-        if (newPosition.y < 14) newPosition.y += 1;
+        if (newPosition.y < 14) {
+          newPosition.y += 1;
+          moved = true;
+        }
         break;
       case "west":
-        if (newPosition.x > 0) newPosition.x -= 1;
+        if (newPosition.x > 0) {
+          newPosition.x -= 1;
+          moved = true;
+        }
         break;
     }
-  
-    // Vérifier si la nouvelle position est valide
+
     const isIsland = ISLANDS.some(p => p.x === newPosition.x && p.y === newPosition.y);
     const isAlreadyVisited = path.some(p => p.x === newPosition.x && p.y === newPosition.y);
     
-    // Ne pas bouger si:
-    // - C'est une île
-    // - Déjà visité
-    // - La position n'a pas changé (bordure de la carte)
-    if (!isIsland && !isAlreadyVisited && 
-        (newPosition.x !== currentPosition.x || newPosition.y !== currentPosition.y)) {
+    if (moved && !isIsland && !isAlreadyVisited) {
       setCurrentPosition(newPosition);
       setPath([...path, newPosition]);
-    } else if (isIsland) {
-      // Optionnel: Afficher un message d'alerte
-      alert("Attention ! Vous ne pouvez pas naviguer sur une île !");
+      addChatMessage(`Déplacement vers ${directionToFrench(direction)}`);
     }
   };
 
@@ -82,47 +113,64 @@ const CaptainPage: React.FC = () => {
         </h1>
       </div>
       
-      <div className="control-panel">
-        <ImageMap
-          onSelectStart={handleSelectStart}
-          startPosition={startPosition}
-          isConfirmed={isConfirmed}
-          onReset={handleReset}
-          onMove={handleMove}
-          path={path}
-          currentPosition={currentPosition}
-        />
-        
-        <div className="movement-controls">
-          {isConfirmed ? (
-            <>
-              <div className="movement-buttons">
-                <button onClick={() => handleMove("north")}>Nord</button>
-                <div className="horizontal-buttons">
-                  <button onClick={() => handleMove("west")}>Ouest</button>
-                  <button onClick={() => handleMove("east")}>Est</button>
-                </div>
-                <button onClick={() => handleMove("south")}>Sud</button>
+      <div className="main-content">
+        <div className="chat-container">
+          <div className="chat-header">Historique</div>
+          <div className="chat-messages">
+            {chatMessages.map((msg, index) => (
+              <div key={index} className={`chat-message ${msg.isSystem ? "system" : ""}`}>
+                {msg.text}
               </div>
-              <button onClick={handleReset}>Réinitialiser</button>
-            </>
-          ) : (
-            <button
-              onClick={handleConfirm}
-              disabled={!startPosition}
-              style={{
-                opacity: startPosition ? 1 : 0.5,
-                cursor: startPosition ? "pointer" : "not-allowed"
-              }}
-            >
-              Confirmer la position
-            </button>
-          )}
+            ))}
+          </div>
+        </div>
+        
+        <div className="map-and-controls">
+          <div className="control-panel">
+            <ImageMap
+              onSelectStart={handleSelectStart}
+              startPosition={startPosition}
+              isConfirmed={isConfirmed}
+              onReset={handleReset}
+              onMove={handleMove}
+              path={path}
+              currentPosition={currentPosition}
+            />
+            
+            <div className="movement-controls">
+              {isConfirmed ? (
+                <>
+                  <div className="movement-buttons">
+                    <button onClick={() => handleMove("north")}>Nord</button>
+                    <div className="horizontal-buttons">
+                      <button onClick={() => handleMove("west")}>Ouest</button>
+                      <button onClick={() => handleMove("east")}>Est</button>
+                    </div>
+                    <button onClick={() => handleMove("south")}>Sud</button>
+                  </div>
+                  <button onClick={handleReset}>Réinitialiser</button>
+                </>
+              ) : (
+                <button
+                  onClick={handleConfirm}
+                  disabled={!startPosition}
+                  style={{
+                    opacity: startPosition ? 1 : 0.5,
+                    cursor: startPosition ? "pointer" : "not-allowed"
+                  }}
+                >
+                  Confirmer la position
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
+
 
 const ISLANDS: Coord[] = [
   // Secteur 1 (A1-E5)
