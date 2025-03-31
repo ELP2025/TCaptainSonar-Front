@@ -1,15 +1,30 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import History from "../components/History";
 import DisconnectButton from "../components/DisconnectButton";
 
 
+
+
 function HomePage() {
-    const [showHistory, setShowHistory] = useState(false);    
+    const [showHistory, setShowHistory] = useState(false); 
+
     return (
         <div style={{ position: 'relative', minHeight: '100vh' }}>
             <div className="nes-container">
                 <h1>Page d'Accueil</h1>
             </div>
+
+            <div className="nes-container" style={{ margin: '2rem auto', textAlign: 'center' }}>
+                <Link 
+                    to="/lobby" 
+                    className="nes-btn is-success" 
+                    style={{ marginBottom: '1rem' }}
+                >
+                    Accéder au Lobby
+                </Link>
+            </div>
+            
 
             {/* Bouton positionné en bas à droite */}
             <div className="position-fixed bottom-0 end-0 p-3" style={{ zIndex: 100 }}>
@@ -21,8 +36,8 @@ function HomePage() {
                 </button>
                 <DisconnectButton/>
             </div>
+                {showHistory && <History />}
 
-            {showHistory && <History />}
         </div>
     );
 }

@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
+import LobbyPage from './pages/LobbyPage.tsx'; 
 
 function App() {
   return (
@@ -16,8 +17,13 @@ function App() {
             <HomePage  />
           </ProtectedRoute>
         } />        <Route path="*" element={<LoginPage />} />
+        <Route path="/Lobby" element= {
+          <ProtectedRoute> 
+            <LobbyPage /> 
+          </ProtectedRoute>} />
+
       </Routes>
-    </BrowserRouter>
+          </BrowserRouter>
     </AuthProvider>
   );
 }
