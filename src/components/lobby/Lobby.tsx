@@ -25,62 +25,90 @@ const Lobby: React.FC<LobbyProps> = ({
 
   useEffect(() => {
     if (!isAuthenticated) return;
-
+  
     const newSocket = io('http://localhost:3000', {
-      auth: { token: Cookies.get('token') }
+      auth: { token: Cookies.get('token') },
+      transports: ['websocket'] // Force WebSocket
     });
-
+  
+    console.log('Tentative de connexion socket...'); // Debug 1
+  
+    newSocket.on('connect', () => {
+      console.log('Connecté au socket! ID:', newSocket.id); // Debug 2
+    });
+  
+    newSocket.on('connect_error', (err) => {
+      console.error('Erreur de connexion:', err); // Debug 3
+    });
+  
     setSocket(newSocket);
-
-    newSocket.on('roles_update', (updatedOccupied: Record<TeamType, string[]>) => {
+  
+    newSocket.on('roles_update', (updatedOccupied) => {
+      console.log('Reçu roles_update:', updatedOccupied); // Debug 4
       setOccupiedRoles(updatedOccupied);
     });
-
+  
     return () => {
+      newSocket.off('roles_update'); // Nettoyage explicite
       newSocket.close();
     };
   }, [isAuthenticated]);
 
   const handleSelection = (team: TeamType, role: string) => {
-    const newSelection = selected?.role === role && selected.team === team ? null : { team, role };
-    setSelected(newSelection);
-    
-    if (socket) {
-      socket.emit('role_selection', {
-        team,
-        role,
-        action: newSelection ? 'select' : 'deselect'
+    // Si le rôle est déjà sélectionné par l'utilisateur, on le désélectionne
+    if (selected?.team === team && selected?.role === role) {
+      setSelected(null);
+      socket?.emit('role_selection', { team, role, action: 'deselect' });
+      return;
+    }
+  
+    // Si l'utilisateur a déjà un rôle sélectionné (dans n'importe quelle équipe), on le désélectionne d'abord
+    if (selected) {
+      socket?.emit('role_selection', { 
+        team: selected.team, 
+        role: selected.role, 
+        action: 'deselect' 
       });
     }
+  
+    // Sélectionne le nouveau rôle
+    const newSelection = { team, role };
+    setSelected(newSelection);
+    socket?.emit('role_selection', { team, role, action: 'select' });
+  };
+  
+  const isRoleOccupied = (team: TeamType, role: string) => {
+    // Vérifie seulement dans l'équipe concernée
+    return occupiedRoles[team].includes(role) && 
+           !(selected?.team === team && selected?.role === role);
   };
 
-  const isRoleOccupied = (team: TeamType, role: string) => 
-    occupiedRoles[team].includes(role);
-
-  const renderTeamSection = (team: TeamType) => (
-    <div className={`team-section ${team}-team`}>
-      <h2 className={`nes-text is-${team === 'blue' ? 'primary' : 'error'}`}>
-        Équipe {team === 'blue' ? 'Bleue' : 'Rouge'}
-      </h2>
-      <div className="roles-grid">
-        {availableRoles.map(role => (
+const renderTeamSection = (team: TeamType) => (
+  <div className={`team-section ${team}-team`}>
+    <h2 className={`nes-text is-${team === 'blue' ? 'primary' : 'error'}`}>
+      Équipe {team === 'blue' ? 'Bleue' : 'Rouge'}
+    </h2>
+    <div className="roles-grid">
+      {availableRoles.map(role => {
+        const isSelected = selected?.team === team && selected.role === role;
+        const isOccupied = isRoleOccupied(team, role);
+        
+        return (
           <button
             key={`${team}-${role}`}
             className={`nes-btn ${
-              selected?.team === team && selected.role === role 
-                ? 'is-primary' 
-                : isRoleOccupied(team, role) ? 'is-disabled' : ''
+              isSelected ? 'is-primary' : 
+              isOccupied ? 'is-disabled' : ''
             }`}
-            onClick={() => handleSelection(team, role)}
-            disabled={isRoleOccupied(team, role)}
+            onClick={() => !isOccupied && handleSelection(team, role)}
+            disabled={isOccupied}
           >
             {role}
           </button>
-        ))}
-      </div>
+        );
+      })}
     </div>
-  );
-
+  </div>);
   return (
     <div className="lobby-container">
       <h1>Captain Sonar Lobby</h1>
