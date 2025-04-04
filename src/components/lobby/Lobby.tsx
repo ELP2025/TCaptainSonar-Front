@@ -14,6 +14,7 @@ type RoleSelection = { team: TeamType; role: string } | null;
 
 const Lobby: React.FC<LobbyProps> = ({ 
   availableRoles = ["Capitaine", "Second", "Ingénieur", "Opérateur Radio"] 
+  // availableRoles = ["Capitaine"]
 }) => {
   const { isAuthenticated } = useAuth();
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -22,6 +23,22 @@ const Lobby: React.FC<LobbyProps> = ({
     blue: [],
     red: []
   });
+  const [flag, setFlag] = useState(false)
+
+  if(flag == false){
+    const newSocket = io('http://localhost:3000', {
+      auth: { token: Cookies.get('token') },
+      transports: ['websocket'] // Force WebSocket
+    });
+    
+    newSocket?.emit('getRole');
+    newSocket?.on('roles_update', (updatedOccupied) => {
+      console.log('Reçu roles_update:', updatedOccupied); // Debug 4
+      setOccupiedRoles(updatedOccupied);
+    });
+    setFlag(true)
+  }
+ 
 
   useEffect(() => {
     if (!isAuthenticated) return;
