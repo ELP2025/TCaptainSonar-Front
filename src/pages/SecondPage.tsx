@@ -1,135 +1,132 @@
-/*import React, { useState } from 'react';
-import './SecondPage.css';
-import OurComponent from './OurComponent';
-
-function SecondPage() {
-  const [warningMarks, setWarningMarks] = useState(0);
-
-  const addWarningMark = () => setWarningMarks(prev => prev < 4 ? prev + 1 : prev);
-  const resetAll = () => setWarningMarks(0);
-
-  return (
-    <div className="secondPage">
-      <div className="content">
-        <h1>PREMIER MAÎTRE</h1>
-        
-        <div className="components-grid">
-          <OurComponent max_marks={2} buttonText='Mine'/>
-          <OurComponent max_marks={3} buttonText='Torpille'/>
-          <OurComponent max_marks={3} buttonText='Drone'/>
-          <OurComponent max_marks={2} buttonText='Sonar'/>
-          <OurComponent max_marks={5} buttonText='Furtif'/>
-          <OurComponent max_marks={5} buttonText='Scénario'/>
-        </div>
-
-        <div className="warning-section">
-          <div className="warning-container">
-            <span className="warning-text">WARNING!</span>
-            <div className="warning-checkboxes">
-              {Array.from({ length: 4 }, (_, i) => (
-                <div key={i} className={`checkbox ${i < warningMarks ? 'checked' : ''}`}>
-                  {i < warningMarks && <span className="checkmark">✓</span>}
-                </div>
-              ))}
-            </div>
-          </div>
-          <button onClick={addWarningMark} className="warning-button">
-            Ajouter warning
-          </button>
-        </div>
-
-        <button onClick={resetAll} className="reset-button">
-          Réinitialiser tout
-        </button>
-      </div>
-    </div>
-  );
-}
-
-export default SecondPage;*/
-
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import 'nes.css/css/nes.min.css';
 import './SecondPage.css';
+import System from './System';
+
+interface Item {
+  name: string;
+  used: boolean;
+}
 
 function SecondPage() {
-  const [warningMarks, setWarningMarks] = useState(0);
+  const [warnings, setWarnings] = useState(0);
+  const [items, setItems] = useState<Item[]>([]);
+  const [resetFlags, setResetFlags] = useState<Record<string, boolean>>({});
 
-  const addWarningMark = () => setWarningMarks(prev => prev < 4 ? prev + 1 : prev);
-  const resetAll = () => setWarningMarks(0);
+  useEffect(() => {
+    if (Object.values(resetFlags).some(value => value)) {
+      setTimeout(() => {
+        setResetFlags({});
+      }, 0); // Délais minimal pour s'assurer que React a fait son rendu
+    }
+  }, [resetFlags]);
+
+  const addWarning = () => setWarnings(prev => Math.min(prev + 1, 4));
+
+  const resetAll = () => {
+    setWarnings(0);
+    setItems([]);
+  };
+
+  const completeItem = (name: string) => {
+    if (!items.some(item => item.name === name)) {
+      setItems([...items, { name, used: false }]);
+    }
+  };
+
+
+const useItem = (name: string) => {
+  setItems(prevItems => prevItems.filter(item => item.name !== name));
+  setResetFlags(prev => ({ ...prev, [name]: true }));
+};
 
   return (
-    <div className="secondPage nes-container is-dark">
-      <div className="content">
-        <h1 className="nes-text is-primary">SECOND</h1>
-        
-        <div className="components-grid">
-          <ActionComponent max_marks={2} buttonText='Mine'/>
-          <ActionComponent max_marks={3} buttonText='Torpille'/>
-          <ActionComponent max_marks={3} buttonText='Drone'/>
-          <ActionComponent max_marks={2} buttonText='Sonar'/>
-          <ActionComponent max_marks={5} buttonText='Furtif'/>
-          <ActionComponent max_marks={5} buttonText='Scénario'/>
-        </div>
-
-        <div className="warning-section nes-container is-rounded">
-          <span className="nes-text is-error">WARNING!</span>
-          <div className="warning-checkboxes">
+    <div className="container">
+      <div className="header">
+        <h1 className="title">SECOND</h1>
+        <div className="warning-header">
+          <span className="warning-label">Warning:</span>
+          <div className="warning-checks">
             {[1, 2, 3, 4].map(i => (
               <label key={i}>
                 <input 
                   type="checkbox" 
-                  className="nes-checkbox is-dark" 
-                  checked={i <= warningMarks}
+                  className="nes-checkbox" 
+                  checked={i <= warnings}
                   readOnly
                 />
                 <span></span>
               </label>
             ))}
           </div>
-          <button 
-            onClick={addWarningMark} 
-            className="nes-btn is-error"
-          >
-            Ajouter warning
+          <button onClick={addWarning} className="nes-btn is-error small-warning-btn">
+            +
           </button>
         </div>
-
-        <button 
-          onClick={resetAll} 
-          className="nes-btn is-warning"
-        >
-          Réinitialiser tout
-        </button>
       </div>
-    </div>
-  );
-}
 
-// Composant ActionComponent séparé
-function ActionComponent({ max_marks, buttonText }: { max_marks: number, buttonText: string }) {
-  const [marks, setMarks] = useState(0);
+      <div className="content">
+        <div className="layout">
+          <div className="main">
+            <div className="components-frame nes-container">
+              <div className="grid">
+                <System 
+                  max_marks={2} 
+                  buttonText="Mine"
+                  onComplete={() => completeItem("Mine")}
+                  resetMarks={resetFlags["Mine"]}
+                />
+                <System 
+                  max_marks={3} 
+                  buttonText="Torpille"
+                  onComplete={() => completeItem("Torpille")}
+                  resetMarks={resetFlags["Torpille"]} 
+                />
+                <System 
+                  max_marks={3} 
+                  buttonText="Drone"
+                  onComplete={() => completeItem("Drone")}
+                  resetMarks={resetFlags["Drone"]}
+                />
+                <System 
+                  max_marks={2} 
+                  buttonText="Sonar"
+                  onComplete={() => completeItem("Sonar")}
+                  resetMarks={resetFlags["Sonar"]}
+                />
+                <System 
+                  max_marks={5} 
+                  buttonText="Furtif"
+                  onComplete={() => completeItem("Furtif")}
+                  resetMarks={resetFlags["Furtif"]}
+                />
+              </div>
+            </div>
 
-  return (
-    <div className="component-row">
-      <button 
-        onClick={() => setMarks(prev => prev < max_marks ? prev + 1 : prev)} 
-        className="nes-btn is-success"
-      >
-        {buttonText}
-      </button>
-      <div className="checkboxes">
-        {[...Array(max_marks)].map((_, i) => (
-          <label key={i}>
-            <input 
-              type="checkbox" 
-              className="nes-checkbox is-dark" 
-              checked={i < marks}
-              readOnly
-            />
-            <span></span>
-          </label>
-        ))}
+            <div className="action-buttons"> 
+              <button onClick={resetAll} className="nes-btn is-warning reset-btn">
+                Réinitialiser tout
+              </button>
+            </div>
+          </div>
+
+          <div className="items-box nes-container">
+            <h2 className="items-title">Objets chargés</h2>
+            <ul className="items-list">
+              {items.map((item, index) => (
+                <li key={index} className="item">
+                  <span className="nes-text is-primary">{item.name}</span>
+                  <button 
+                    onClick={() => useItem(item.name)} 
+                    className="nes-btn is-success use-btn"
+                  >
+                    Utiliser
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
