@@ -9,84 +9,76 @@ interface Item {
 }
 
 /**
- * Composant SecondPage - Interface principale avec systèmes interactifs
+ * Composant SecondPage - Interface principale avec le nouveau système d'actions alternées
  * 
- * Gère :
- * - Un système d'avertissements avec compteur (0-4)
- * - Une collection d'items pouvant être ajoutés et utilisés
- * - Des systèmes interactifs avec complétion progressive
- * - Un mécanisme de permission d'action avec délai de 5s après modification
+ * Nouveautés :
+ * - Système d'actions autorisées (0: rien, 1: systèmes, 2: utilisations)
+ * - Timer de 5 secondes entre chaque action
+ * - Boutons désactivés selon le mode
  */
 function SecondPage() {
-  const [warnings, setWarnings] = useState(0); // Compteur d'avertissements (0 à 4 max)
-  const [items, setItems] = useState<Item[]>([]); // Liste des items chargés
-  const [resetFlags, setResetFlags] = useState<Record<string, boolean>>({}); // Flags pour réinitialiser les systèmes
-  const [actionPermission, setActionPermission] = useState(false); // Permission pour effectuer des actions
+  const [warnings, setWarnings] = useState(0);
+  const [items, setItems] = useState<Item[]>([]);
+  const [resetFlags, setResetFlags] = useState<Record<string, boolean>>({});
+  const [allowedAction, setAllowedAction] = useState<0 | 1 | 2>(0);
 
   /**
-   * Effet qui gère le délai de 5 secondes après chaque modification des items
-   * Active la permission d'action après ce délai
+   * Effet pour gérer l'alternance des modes d'action
+   * Toutes les 5 secondes, passe aléatoirement en mode 1 ou 2
    */
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setActionPermission(true);
-    }, 1000);
+    if (allowedAction === 0) {
+      const timer = setTimeout(() => {
+        const nextMode = items.length > 0 ? (Math.random() > 0.5 ? 1 : 2) : 1;
+        setAllowedAction(nextMode);
+      }, 2000);
 
-    return () => clearTimeout(timeout);
-  }, [items]);
-
-  /**
-   * Effet qui nettoie les resetFlags après leur utilisation
-   * S'exécute dès qu'un flag est activé et les réinitialise
-   */
-  useEffect(() => {
-    if (Object.values(resetFlags).some(v => v)) {
-      setTimeout(() => setResetFlags({}), 0);
+      return () => clearTimeout(timer);
     }
-  }, [resetFlags]);
+  }, [allowedAction, items.length]);
 
   /**
-   * Ajoute un avertissement (max 4)
+   * Consomme l'action en cours et retourne en mode attente
    */
+  const consumeAction = () => {
+    setAllowedAction(0);
+  };
+
   const addWarning = () => {
     setWarnings(prev => Math.min(prev + 1, 4));
   };
 
-  /**
-   * Réinitialise complètement l'état (avertissements et items)
-   */
-  const resetAll = () => {
-    setWarnings(0);
-    setItems([]);
-  };
-
-  /**
-   * Ajoute un nouvel item à la liste s'il n'existe pas déjà
-   * @param name - Nom de l'item à ajouter
-   */
   const completeItem = (name: string) => {
-    if (!items.some(item => item.name === name)) {
+    if (allowedAction === 1 && !items.some(item => item.name === name)) {
       setItems([...items, { name, used: false }]);
-      setActionPermission(false); // Bloque les actions après ajout
+      consumeAction();
     }
   };
 
-  /**
-   * Utilise un item : le retire de la liste et déclenche son reset
-   * @param name - Nom de l'item à utiliser
-   */
   const useItem = (name: string) => {
-    setItems(prevItems => prevItems.filter(item => item.name !== name));
-    setResetFlags(prev => ({ ...prev, [name]: true })); // Active le reset pour ce système
-    setActionPermission(false); // Bloque les actions après utilisation
+    if (allowedAction === 2) {
+      setItems(prevItems => prevItems.filter(item => item.name !== name));
+      setResetFlags(prev => ({ ...prev, [name]: true }));
+      setTimeout(() => {
+        setResetFlags(prev => ({ ...prev, [name]: false }));
+      }, 10);
+      consumeAction();
+    }
   };
-
   return (
     <div className="container">
       <div className="header">
         <h1 className="title">SECOND</h1>
 
-        {/* Section d'affichage des avertissements */}
+        {/* Indicateur de mode */}
+        <div className={`action-mode nes-container is-rounded ${
+          allowedAction === 0 ? 'is-dark' : 
+          allowedAction === 1 ? 'is-primary' : 'is-success'
+        }`}>
+          {allowedAction === 0 ? 'En attente...' : 
+           allowedAction === 1 ? 'Mode Systèmes' : 'Mode Utilisation'}
+        </div>
+
         <div className="warning-header">
           <span className="warning-label">Warning:</span>
           <div className="warning-checks">
@@ -102,7 +94,9 @@ function SecondPage() {
               </label>
             ))}
           </div>
-          <button onClick={addWarning} className="nes-btn is-error small-warning-btn">
+          <button 
+          onClick={addWarning} 
+          className="nes-btn is-error small-warning-btn">
             +
           </button>
         </div>
@@ -111,7 +105,6 @@ function SecondPage() {
       <div className="content">
         <div className="layout">
           <div className="main">
-            {/* Grille des systèmes interactifs */}
             <div className="components-frame nes-container">
               <div className="grid">
                 {["Mine", "Torpille", "Drone", "Sonar", "Furtif"].map(name => (
@@ -121,21 +114,15 @@ function SecondPage() {
                     buttonText={name}
                     onComplete={() => completeItem(name)}
                     resetMarks={resetFlags[name]}
-                    canAct={actionPermission}
+                    allowedAction={allowedAction}
+                    onActionConsumed={consumeAction}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Bouton de réinitialisation globale */}
-            <div className="action-buttons"> 
-              <button onClick={resetAll} className="nes-btn is-warning reset-btn">
-                Réinitialiser tout
-              </button>
-            </div>
           </div>
 
-          {/* Panneau d'affichage des items chargés */}
           <div className="items-box nes-container">
             <h2 className="items-title">Objets chargés</h2>
             <ul className="items-list">
@@ -144,7 +131,8 @@ function SecondPage() {
                   <span className="nes-text is-primary">{item.name}</span>
                   <button
                     onClick={() => useItem(item.name)}
-                    className="nes-btn is-success use-btn"
+                    className={`nes-btn ${allowedAction === 2 ? 'is-success' : 'is-disabled'}`}
+                    disabled={allowedAction !== 2}
                   >
                     Utiliser
                   </button>
