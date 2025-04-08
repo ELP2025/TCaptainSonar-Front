@@ -6,6 +6,8 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import LobbyPage from './pages/LobbyPage.tsx'; 
 import CaptainPage from './pages/CaptainPage.tsx';
+import MecanoPage from './pages/MecanoPage.tsx';
+import DetectorPage from './pages/DetectorPage.tsx';
 
 function App() {
   return (
@@ -25,6 +27,14 @@ function App() {
           <Route path="/Captain" element= {
           <ProtectedRoute> 
             <CaptainPage /> 
+          </ProtectedRoute>} />
+          <Route path="/Mecano" element= {
+          <ProtectedRoute> 
+            <MecanoPage /> 
+          </ProtectedRoute>} />
+          <Route path="/Detector" element= {
+          <ProtectedRoute> 
+            <DetectorPage /> 
           </ProtectedRoute>} />
 
       </Routes>
