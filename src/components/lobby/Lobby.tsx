@@ -4,6 +4,23 @@ import "nes.css/css/nes.min.css";
 import { io, Socket } from 'socket.io-client';
 import Cookies from 'js-cookie';
 import { useAuth } from '../../context/AuthContext';
+import { jwtDecode } from 'jwt-decode';
+
+// Types
+type Team = {
+  captain: string;
+};
+
+type TeamUpdate = {
+  blue: Team;
+  red: Team;
+};
+
+interface JwtPayload {
+  id: string;
+  username: string;
+  [key: string]: any;
+}
 
 interface LobbyProps {
   availableRoles?: string[];
@@ -13,119 +30,144 @@ type TeamType = 'blue' | 'red';
 type RoleSelection = { team: TeamType; role: string } | null;
 
 const Lobby: React.FC<LobbyProps> = ({ 
-  availableRoles = ["Capitaine", "Second", "Ingénieur", "Opérateur Radio"] 
-  // availableRoles = ["Capitaine"]
+  availableRoles = ["Capitaine"]
 }) => {
   const { isAuthenticated } = useAuth();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [selected, setSelected] = useState<RoleSelection>(null);
-  const [occupiedRoles, setOccupiedRoles] = useState<Record<TeamType, string[]>>({
-    blue: [],
-    red: []
+  const [teams, setTeams] = useState<TeamUpdate>({
+    blue: { captain: '' },
+    red: { captain: '' }
   });
-  const [flag, setFlag] = useState(false)
+  const [flag, setFlag] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  if(flag == false){
+  // Récupération de l'ID utilisateur
+  useEffect(() => {
+    const fetchUserData = () => {
+      const token = Cookies.get('token');
+      if (!token) {
+          console.log("Pas de token trouvé");
+          return;
+      }
+
+      try {
+          const decoded = jwtDecode<JwtPayload>(token);
+          setCurrentUserId(decoded.id);
+          return decoded;
+      } catch (err) {
+          console.error("Erreur de décodage:", err);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  // Initial socket setup
+  useEffect(() => {
+    if (!isAuthenticated || !currentUserId) return;
+
     const newSocket = io('http://localhost:3000', {
       auth: { token: Cookies.get('token') },
-      transports: ['websocket'] // Force WebSocket
+      transports: ['websocket']
     });
     
-    newSocket?.emit('getRole');
-    newSocket?.on('roles_update', (updatedOccupied) => {
-      console.log('Reçu roles_update:', updatedOccupied); // Debug 4
-      setOccupiedRoles(updatedOccupied);
+    newSocket.emit('getRole');
+    newSocket.on('teams_update', (updatedTeams: TeamUpdate) => {
+      setTeams(updatedTeams);
+      console.log("update teams", teams)
+      console.log("update teams", updatedTeams.red.captain)
     });
-    setFlag(true)
-  }
- 
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
-  
-    const newSocket = io('http://localhost:3000', {
-      auth: { token: Cookies.get('token') },
-      transports: ['websocket'] // Force WebSocket
-    });
-  
-    console.log('Tentative de connexion socket...'); // Debug 1
-  
-    newSocket.on('connect', () => {
-      console.log('Connecté au socket! ID:', newSocket.id); // Debug 2
-    });
-  
-    newSocket.on('connect_error', (err) => {
-      console.error('Erreur de connexion:', err); // Debug 3
-    });
-  
     setSocket(newSocket);
-  
-    newSocket.on('roles_update', (updatedOccupied) => {
-      console.log('Reçu roles_update:', updatedOccupied); // Debug 4
-      setOccupiedRoles(updatedOccupied);
-    });
-  
+
     return () => {
-      newSocket.off('roles_update'); // Nettoyage explicite
+      newSocket.off('teams_update');
       newSocket.close();
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, currentUserId]);
+
+  const startGame = () => {
+    if (!currentUserId) return;
+    socket?.emit("game_start_signal", teams);
+  };
 
   const handleSelection = (team: TeamType, role: string) => {
-    // Si le rôle est déjà sélectionné par l'utilisateur, on le désélectionne
+    if (!currentUserId) return;
+    // Désélection
+    console.log("hello")
+
     if (selected?.team === team && selected?.role === role) {
       setSelected(null);
-      socket?.emit('role_selection', { team, role, action: 'deselect' });
+      socket?.emit('role_selection', { 
+        team, 
+        role, 
+        action: 'deselect',
+        playerId: currentUserId
+      });
       return;
     }
-  
-    // Si l'utilisateur a déjà un rôle sélectionné (dans n'importe quelle équipe), on le désélectionne d'abord
+    // Désélectionner d'abord le rôle actuel si existant
     if (selected) {
       socket?.emit('role_selection', { 
         team: selected.team, 
         role: selected.role, 
-        action: 'deselect' 
+        action: 'deselect',
+        playerId: currentUserId
       });
     }
   
-    // Sélectionne le nouveau rôle
+    // Sélectionner le nouveau rôle
     const newSelection = { team, role };
     setSelected(newSelection);
-    socket?.emit('role_selection', { team, role, action: 'select' });
+    console.log(currentUserId)
+    socket?.emit('role_selection', { 
+      team, 
+      role, 
+      action: 'select',
+      playerId: currentUserId
+    });
   };
   
   const isRoleOccupied = (team: TeamType, role: string) => {
-    // Vérifie seulement dans l'équipe concernée
-    return occupiedRoles[team].includes(role) && 
-           !(selected?.team === team && selected?.role === role);
+    console.log(role)
+    if (role === "Capitaine") {
+      return !!teams[team].captain && 
+             !(selected?.team === team && selected?.role === role);
+    }
+    return false;
   };
 
-const renderTeamSection = (team: TeamType) => (
-  <div className={`team-section ${team}-team`}>
-    <h2 className={`nes-text is-${team === 'blue' ? 'primary' : 'error'}`}>
-      Équipe {team === 'blue' ? 'Bleue' : 'Rouge'}
-    </h2>
-    <div className="roles-grid">
-      {availableRoles.map(role => {
-        const isSelected = selected?.team === team && selected.role === role;
-        const isOccupied = isRoleOccupied(team, role);
-        
-        return (
-          <button
-            key={`${team}-${role}`}
-            className={`nes-btn ${
-              isSelected ? 'is-primary' : 
-              isOccupied ? 'is-disabled' : ''
-            }`}
-            onClick={() => !isOccupied && handleSelection(team, role)}
-            disabled={isOccupied}
-          >
-            {role}
-          </button>
-        );
-      })}
+  const renderTeamSection = (team: TeamType) => (
+    <div className={`team-section ${team}-team`}>
+      <h2 className={`nes-text is-${team === 'blue' ? 'primary' : 'error'}`}>
+        Équipe {team === 'blue' ? 'Bleue' : 'Rouge'}
+      </h2>
+      <div className="roles-grid">
+        {availableRoles.map(role => {
+          const isSelected = selected?.team === team && selected.role === role;
+          const isOccupied = isRoleOccupied(team, role);
+          
+          return (
+            <button
+              key={`${team}-${role}`}
+              className={`nes-btn ${
+                isSelected ? 'is-primary' : 
+                isOccupied ? 'is-disabled' : ''
+              }`}
+              onClick={() => !isOccupied && handleSelection(team, role)}
+              disabled={isOccupied}
+            >
+              {role}
+            </button>
+          );
+        })}
+      </div>
     </div>
-  </div>);
+  );
+
+  const canStartGame = teams.blue.captain && teams.red.captain;
+
   return (
     <div className="lobby-container">
       <h1>Captain Sonar Lobby</h1>
@@ -133,8 +175,11 @@ const renderTeamSection = (team: TeamType) => (
         {renderTeamSection('blue')}
         {renderTeamSection('red')}
       </div>
-    </div>
+      <div>
+        {canStartGame && <button className="nes-btn" onClick={startGame}>Lancer partie</button>}
+      </div>
+    </div> 
   );
-};
+}; 
 
 export default Lobby;
