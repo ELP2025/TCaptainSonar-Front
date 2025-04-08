@@ -9,7 +9,8 @@ import { useNavigate } from 'react-router-dom';
 
 // Types
 type Team = {
-  captain: string;
+  captain: string,
+  mecano:string;
 };
 
 type TeamUpdate = {
@@ -31,14 +32,14 @@ type TeamType = 'blue' | 'red';
 type RoleSelection = { team: TeamType; role: string } | null;
 
 const Lobby: React.FC<LobbyProps> = ({ 
-  availableRoles = ["Capitaine"]
+  availableRoles = ["Capitaine", "Mecano"]
 }) => {
   const { isAuthenticated } = useAuth();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [selected, setSelected] = useState<RoleSelection>(null);
   const [teams, setTeams] = useState<TeamUpdate>({
-    blue: { captain: '' },
-    red: { captain: '' }
+    blue: { captain: '',mecano:'' },
+    red: { captain: '',mecano:'' }
   });
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const selectedRef = useRef<RoleSelection>(null);
@@ -80,8 +81,8 @@ const Lobby: React.FC<LobbyProps> = ({
     newSocket.emit('getRole');
     newSocket.on('teams_update', (updatedTeams: TeamUpdate) => {
       setTeams(updatedTeams);
-      console.log("update teams", teams)
-      console.log("update teams", updatedTeams.red.captain)
+      console.log("update teams YOOO", updatedTeams)
+      console.log("red Captain", updatedTeams.red.captain)
     });
     newSocket.on("game_start", ()=> {
       console.log("selected (via ref):", selectedRef.current); 
@@ -128,7 +129,7 @@ const Lobby: React.FC<LobbyProps> = ({
     // Sélectionner le nouveau rôle
     const newSelection = { team, role };
     setSelected(newSelection);
-
+    console.log(newSelection);
     socket?.emit('role_selection', { 
       team, 
       role, 
@@ -140,7 +141,11 @@ const Lobby: React.FC<LobbyProps> = ({
   const isRoleOccupied = (team: TeamType, role: string) => {
     if (role === "Capitaine") {
       return !!teams[team].captain && 
-               !(selected?.team === team && selected?.role === role);
+             !(selected?.team === team && selected?.role === role);
+    }
+    if (role === "Mecano") {
+      return !!teams[team].mecano && 
+             !(selected?.team === team && selected?.role === role);
     }
     return false;
   };
@@ -173,7 +178,7 @@ const Lobby: React.FC<LobbyProps> = ({
     </div>
   );
 
-  const canStartGame = teams.blue.captain && teams.red.captain;
+  const canStartGame = teams.blue.captain && teams.red.captain && teams.blue.mecano && teams.red.mecano;
 
   return (
     <div className="lobby-container">
