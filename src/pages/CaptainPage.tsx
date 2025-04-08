@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
 import ImageMap from "../components/ImageMap";
 import "./CaptainPage.css";
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:3000');
+
+
 
 type Coord = {
   x: number;
@@ -13,6 +19,10 @@ type ChatMessage = {
 };
 
 const CaptainPage: React.FC = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const team = params.get('team') as 'blue' | 'red';
+  const roomId = params.get('roomId') || 'defaultRoom';
   const [startPosition, setStartPosition] = useState<Coord | null>(null);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [path, setPath] = useState<Coord[]>([]);
@@ -27,6 +37,24 @@ const CaptainPage: React.FC = () => {
       return newMessages.slice(-MAX_MESSAGES);
     });
   };
+
+  useEffect(() => {
+    socket.emit('joinRoom', roomId); // Rejoindre la room spécifique
+    socket.emit('getMapState');      // Demander l’état initial de la carte
+
+    socket.on('map_update', (mapState) => {
+      const teamState = mapState[team]; // État spécifique à l’équipe
+      setPath(teamState.path || []);
+      setCurrentPosition(teamState.currentPosition || null);
+      setIsBlocked(teamState.isBlocked || false);
+    });
+
+return () => {
+      socket.off('map_update');
+    };
+  }, [team, roomId]);
+
+
 
   const checkIfCompletelyBlocked = (position: Coord): boolean => {
     const directions = [
@@ -59,6 +87,7 @@ const CaptainPage: React.FC = () => {
     if (startPosition) {
       setIsConfirmed(true);
       addChatMessage("Position confirmée. Prêt à naviguer !", true);
+      socket.emit('setInitialPosition', { team, position: startPosition });
     }
   };
 
@@ -69,6 +98,7 @@ const CaptainPage: React.FC = () => {
     setCurrentPosition(null);
     setChatMessages([]);
     setIsBlocked(false);
+    socket.emit('reset', { team });
   };
 
   const directionToFrench = (dir: string) => {
@@ -85,11 +115,12 @@ const CaptainPage: React.FC = () => {
     setPath(path.length > 0 ? [path[path.length - 1]] : []);
     setIsBlocked(false);
     addChatMessage("BLACKOUT effectué", true);
+    socket.emit('blackout', { team });
   };
 
   const handleMove = (direction: string) => {
     if (!currentPosition) return;
-
+    socket.emit('move', { direction, team });
     const newPosition = { ...currentPosition };
     let moved = false;
     

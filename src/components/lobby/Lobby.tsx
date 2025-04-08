@@ -4,6 +4,7 @@ import "nes.css/css/nes.min.css";
 import { io, Socket } from 'socket.io-client';
 import Cookies from 'js-cookie';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface LobbyProps {
   availableRoles?: string[];
@@ -13,9 +14,11 @@ type TeamType = 'blue' | 'red';
 type RoleSelection = { team: TeamType; role: string } | null;
 
 const Lobby: React.FC<LobbyProps> = ({ 
+  
   availableRoles = ["Capitaine", "Second", "Ingénieur", "Opérateur Radio"] 
   // availableRoles = ["Capitaine"]
 }) => {
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [selected, setSelected] = useState<RoleSelection>(null);
@@ -77,6 +80,9 @@ const Lobby: React.FC<LobbyProps> = ({
       setSelected(null);
       socket?.emit('role_selection', { team, role, action: 'deselect' });
       return;
+    }
+    if (role === "Capitaine") {
+      navigate(`/captain?team=${team}&roomId=12`);
     }
   
     // Si l'utilisateur a déjà un rôle sélectionné (dans n'importe quelle équipe), on le désélectionne d'abord
