@@ -4,9 +4,17 @@ import "nes.css/css/nes.min.css";
 import { io, Socket } from 'socket.io-client';
 import Cookies from 'js-cookie';
 import { useAuth } from '../../context/AuthContext';
+import { Link, useNavigate } from "react-router-dom";
 
 interface LobbyProps {
   availableRoles?: string[];
+}
+interface Team {
+  Captain: string;
+}
+interface TeamUpdate {
+  blue: Team;
+  red: Team;
 }
 
 type TeamType = 'blue' | 'red';
@@ -18,6 +26,7 @@ const Lobby: React.FC<LobbyProps> = ({
   const { isAuthenticated } = useAuth();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [selected, setSelected] = useState<RoleSelection>(null);
+  const navigate = useNavigate();
   const [occupiedRoles, setOccupiedRoles] = useState<Record<TeamType, string[]>>({
     blue: [],
     red: []
@@ -34,6 +43,17 @@ const Lobby: React.FC<LobbyProps> = ({
 
     newSocket.on('roles_update', (updatedOccupied: Record<TeamType, string[]>) => {
       setOccupiedRoles(updatedOccupied);
+    });
+
+    newSocket.on('game_start', (data: TeamUpdate) => {
+
+      if (data.blue.Captain === "Coustaud") {
+        navigate('/captain');
+      } else if (data.red.Captain === "Bobleponge_carre") {
+        navigate('/captain');
+      } else {
+        navigate('/member');
+      }
     });
 
     return () => {
@@ -87,6 +107,15 @@ const Lobby: React.FC<LobbyProps> = ({
       <div className="teams-container">
         {renderTeamSection('blue')}
         {renderTeamSection('red')}
+      </div>
+      <div className="nes-container" style={{ margin: '2rem auto', textAlign: 'center' }}>
+                <Link 
+                    to="/game1" 
+                    className="nes-btn is-success" 
+                    style={{ marginBottom: '1rem' }}
+                >
+                    Plonger !
+                </Link>
       </div>
     </div>
   );

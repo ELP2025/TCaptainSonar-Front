@@ -1,4 +1,3 @@
-import React from 'react';
 import Lobby from '../components/lobby/Lobby';
 
 const LobbyPage = () => {
