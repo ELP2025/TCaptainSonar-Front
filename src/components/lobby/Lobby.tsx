@@ -5,6 +5,7 @@ import { io, Socket } from 'socket.io-client';
 import Cookies from 'js-cookie';
 import { useAuth } from '../../context/AuthContext';
 import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 // Types
 type Team = {
@@ -39,8 +40,9 @@ const Lobby: React.FC<LobbyProps> = ({
     blue: { captain: '' },
     red: { captain: '' }
   });
-  const [flag, setFlag] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const navigate = useNavigate()
+
 
   // Récupération de l'ID utilisateur
   useEffect(() => {
@@ -78,7 +80,11 @@ const Lobby: React.FC<LobbyProps> = ({
       console.log("update teams", teams)
       console.log("update teams", updatedTeams.red.captain)
     });
+    newSocket?.on("game_start", ()=> {
+      navigate('/bonne page');
 
+    })
+ 
     setSocket(newSocket);
 
     return () => {
@@ -95,7 +101,6 @@ const Lobby: React.FC<LobbyProps> = ({
   const handleSelection = (team: TeamType, role: string) => {
     if (!currentUserId) return;
     // Désélection
-    console.log("hello")
 
     if (selected?.team === team && selected?.role === role) {
       setSelected(null);
@@ -120,7 +125,6 @@ const Lobby: React.FC<LobbyProps> = ({
     // Sélectionner le nouveau rôle
     const newSelection = { team, role };
     setSelected(newSelection);
-    console.log(currentUserId)
     socket?.emit('role_selection', { 
       team, 
       role, 
@@ -130,7 +134,6 @@ const Lobby: React.FC<LobbyProps> = ({
   };
   
   const isRoleOccupied = (team: TeamType, role: string) => {
-    console.log(role)
     if (role === "Capitaine") {
       return !!teams[team].captain && 
              !(selected?.team === team && selected?.role === role);
