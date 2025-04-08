@@ -1,0 +1,148 @@
+@import url(https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap);
+
+.container {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: rgb(255, 255, 255);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 3rem;
+  color: #000000;
+  margin: 0;
+}
+
+.warning-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.warning-label {
+  color: #ff0000;
+  font-size: 1.2rem;
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: rgb(255, 255, 255);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.layout {
+  display: flex;
+  gap: 20px;
+}
+
+.main {
+  flex: 2;
+}
+
+/* Warning Box */
+.warning-box {
+  background: #212529;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.warning-text {
+  color: #d12626;
+  margin: 0;
+}
+
+.warning-checks {
+  display: flex;
+  gap: 10px;
+}
+
+.small-warning-btn {
+  padding: 0 10px;
+  height: 30px;
+}
+
+/* Components Frame */
+.components-frame {
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+/* Items Box */
+.items-box {
+  padding: 15px;
+  height: fit-content;
+}
+
+.items-title {
+  color: #92cc41;
+  margin-bottom: 15px;
+}
+
+.items-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #4a4a4a;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+/* Buttons */
+.warning-btn, .reset-btn {
+  width: 100%;
+}
+
+.reset-btn {
+  padding: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .layout {
+    flex-direction: column;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,212 @@
+  .captain-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: #f0f8ff;
+    padding: 10px 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .title {
+    flex-direction: column;
+    display: flex;
+  }
+  
+  .captain-page h1 {
+  color: #003b5a;
+  font-size: 24px;  /* Réduit de 28px */
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;  /* Réduit de 10px */
+  font-weight: bold;
+  margin-top: 30px;  /* Réduit de 50px */
+  margin-right: 150px;  /* Réduit de 200px */
+}
+  
+  .captain-page p {
+    font-size: 18px;
+    color: #003b5a;
+    margin-bottom: 20px;
+  }
+
+  .map-and-controls {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+  }
+  
+  
+  .control-panel {
+    margin-top: 20px;
+    display: flex;
+    gap: 30px;
+    background: none;
+    align-items: flex-start; /* Alignement en haut */
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px; /* Ou la largeur maximale souhaitée */
+    margin-left: -300px;
+  } 
+  
+  .control-panel button {
+    width: 200px;            /* ✅ Taille fixe */
+    height: 40px;            /* ✅ Hauteur fixe */
+    font-size: 14px;
+    padding: 6px 12px;
+    font-weight: 500;
+    border-radius: 4px;
+    background-color: #0077aa;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 100px;
+  }
+  
+  
+  .control-panel button:hover {
+    background-color: #005577;
+  }
+
+  .disabled-btn {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    background-color: #cccccc !important;
+  }
+  
+  .blackout-btn {
+    background-color: #0077aa;
+    color: white;
+    transition: all 0.3s;
+    width: 200px;
+    height: 40px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    margin-top: 100px;
+  }
+  
+  .blackout-btn.blocked {
+    background-color: #ff5252;
+    animation: pulse 1.5s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  /* DÉPLACEMENT*/
+
+  .movement-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 200px; /* Largeur fixe */
+    flex-shrink: 0; /* Empêche le rétrécissement */
+    margin-top: 100px;
+  }
+
+  .movement-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .horizontal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .movement-buttons button {
+    width: 80px;
+    height: 40px;
+    font-size: 14px;
+    padding: 6px 12px;
+    font-weight: 500;
+    border-radius: 4px;
+    background-color: #0077aa;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .movement-buttons button:hover {
+    background-color: #005577;
+  }
+
+  /* CHAT*/
+
+  .main-content {
+    width: 100%;
+    height: calc(100% - 100px);
+    gap: 10px;  /* Réduit de 20px */
+    padding: 0 10px;  /* Réduit de 20px */
+    display: flex;
+  }  
+  
+  .chat-header {
+    background-color: #0077aa;
+    color: white;
+    padding: 8px;  /* Réduit de 10px */
+    font-size: 14px;  /* Taille de police réduite */
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .chat-container {
+    width: 200px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Cache le dépassement */
+    margin-left: 100px;
+    margin-top: 100px;
+    height: 230px; /* Hauteur fixe pour 5 messages */
+  }
+  
+  .chat-messages {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow: hidden; /* Désactive le scroll */
+    flex-grow: 1;
+  }
+  
+  .chat-message {
+    padding: 6px 10px;
+    background-color: #e3f2fd;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: default;
+    flex-shrink: 0; /* Empêche le rétrécissement */
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .chat-message.system {
+    background-color: #f5f5f5;
+    font-style: italic;
+    color: #666;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
