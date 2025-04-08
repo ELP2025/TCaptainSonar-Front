@@ -26,11 +26,6 @@ function App() {
             <LobbyPage /> 
           </ProtectedRoute>
         } />
-        <Route path="/game1" element={
-          <ProtectedRoute>
-            <GamePage  />
-          </ProtectedRoute>
-        } />
         <Route path="/captain" element={
           <ProtectedRoute>
             <CaptainPage />
