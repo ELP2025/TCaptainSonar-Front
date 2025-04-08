@@ -1,0 +1,53 @@
+  .mecano-wrapper {
+    position: relative;
+    width: 1000px;
+    height: auto;
+    margin-left: 400px;
+    margin-top: 20px;
+  }
+
+  .mecano-wrapper h1{
+    color: #003b5a;
+    font-size: 30px;  /* Réduit de 28px */
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;  /* Réduit de 10px */
+    font-weight: bold;
+    margin-left: 300px;
+    margin-bottom: 50px;
+}
+  
+  
+  .mecano-background {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  
+  .mecano-button {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+  
+  .mecano-button.crossed {
+    background-color: rgba(255, 0, 0, 0.7);
+  }
+  
+  .cross {
+    color: white;
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
