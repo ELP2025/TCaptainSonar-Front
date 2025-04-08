@@ -24,7 +24,7 @@ function App() {
           <ProtectedRoute> 
             <LobbyPage /> 
           </ProtectedRoute>} />
-          <Route path="/Captain" element= {
+          <Route path="/Capitaine" element= {
           <ProtectedRoute> 
             <CaptainPage /> 
           </ProtectedRoute>} />
@@ -32,7 +32,7 @@ function App() {
           <ProtectedRoute> 
             <MecanoPage /> 
           </ProtectedRoute>} />
-          <Route path="/Detector" element= {
+          <Route path="/Detecteur" element= {
           <ProtectedRoute> 
             <DetectorPage /> 
           </ProtectedRoute>} />

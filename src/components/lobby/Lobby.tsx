@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Lobby.css';
 import "nes.css/css/nes.min.css";
 import { io, Socket } from 'socket.io-client';
@@ -41,8 +41,11 @@ const Lobby: React.FC<LobbyProps> = ({
     red: { captain: '' }
   });
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const selectedRef = useRef<RoleSelection>(null);
   const navigate = useNavigate()
-
+  useEffect(() => {
+    selectedRef.current = selected; // ✅ Synchronisation
+  }, [selected]);
 
   // Récupération de l'ID utilisateur
   useEffect(() => {
@@ -80,9 +83,9 @@ const Lobby: React.FC<LobbyProps> = ({
       console.log("update teams", teams)
       console.log("update teams", updatedTeams.red.captain)
     });
-    newSocket?.on("game_start", ()=> {
-      // navigate('/bonne page');
-
+    newSocket.on("game_start", ()=> {
+      console.log("selected (via ref):", selectedRef.current); 
+      navigate("/"+selectedRef.current?.role)
     })
  
     setSocket(newSocket);
@@ -125,6 +128,7 @@ const Lobby: React.FC<LobbyProps> = ({
     // Sélectionner le nouveau rôle
     const newSelection = { team, role };
     setSelected(newSelection);
+
     socket?.emit('role_selection', { 
       team, 
       role, 
@@ -136,7 +140,7 @@ const Lobby: React.FC<LobbyProps> = ({
   const isRoleOccupied = (team: TeamType, role: string) => {
     if (role === "Capitaine") {
       return !!teams[team].captain && 
-             !(selected?.team === team && selected?.role === role);
+               !(selected?.team === team && selected?.role === role);
     }
     return false;
   };
@@ -180,6 +184,9 @@ const Lobby: React.FC<LobbyProps> = ({
       </div>
       <div>
         {canStartGame && <button className="nes-btn" onClick={startGame}>Lancer partie</button>}
+      </div>
+      <div>
+        {selected?.role}
       </div>
     </div> 
   );
