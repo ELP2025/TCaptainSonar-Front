@@ -3,6 +3,8 @@ import 'nes.css/css/nes.min.css';
 import './SecondPage.css';
 import System from './System';
 
+import { io, Socket } from 'socket.io-client';
+
 interface Item {
   name: string;
   used: boolean;
@@ -19,14 +21,34 @@ interface Item {
 function SecondPage() {
   const [warnings, setWarnings] = useState(0);
   const [items, setItems] = useState<Item[]>([]);
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [resetFlags, setResetFlags] = useState<Record<string, boolean>>({});
   const [allowedAction, setAllowedAction] = useState<0 | 1 | 2>(0);
 
-  /**
-   * Effet pour gérer l'alternance des modes d'action
-   * Toutes les 5 secondes, passe aléatoirement en mode 1 ou 2
-   */
   useEffect(() => {
+
+    const newSocket = io('http://localhost:3000');
+    setSocket(newSocket);
+
+    console.log('Tentative de connexion socket...'); // Debug 1
+  
+    newSocket.on('connect', () => {
+      console.log('Connecté au socket! ID:', newSocket.id); // Debug 2
+    });
+  
+
+
+    console.log('Client connecté :', newSocket.id);
+
+    newSocket.on('disconnect', () => {
+      console.log('Client déconnecté :', newSocket.id);
+    });
+
+
+    newSocket.on("warning", (data: number) =>{
+      if (data === 1) {addWarning()};
+    });
+    
     if (allowedAction === 0) {
       const timer = setTimeout(() => {
         const nextMode = items.length > 0 ? (Math.random() > 0.5 ? 1 : 2) : 1;
@@ -42,16 +64,21 @@ function SecondPage() {
    */
   const consumeAction = () => {
     setAllowedAction(0);
+    socket?.emit("check", "second");
   };
 
   const addWarning = () => {
     setWarnings(prev => Math.min(prev + 1, 4));
+    if (warnings === 4){
+      socket?.emit("destruction", 'blue'); // REmplacer blue par la variable de l'équipe
+    }
   };
 
   const completeItem = (name: string) => {
     if (allowedAction === 1 && !items.some(item => item.name === name)) {
       setItems([...items, { name, used: false }]);
       consumeAction();
+      socket?.emit("system_ready", name);
     }
   };
 

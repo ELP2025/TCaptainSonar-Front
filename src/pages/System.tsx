@@ -63,8 +63,6 @@ export default function System({
     </label>
   );
 
-  const topRowBoxes = Math.min(3, max_marks);
-  const bottomRowBoxes = Math.max(0, max_marks - 3);
 
   const getButtonState = () => {
     if (isLocked) return "is-disabled";
@@ -74,7 +72,7 @@ export default function System({
 
   return (
     <div className="nes-container with-title is-centered component-container">
-      <div className="checkboxes-layout">
+      <div className="checkboxes-vertical-layout">
         <button 
           onClick={handleIncrement}
           className={`nes-btn ${getButtonState()}`}
@@ -83,16 +81,9 @@ export default function System({
         >
           {buttonText}
         </button>
-
-        <div className="checkboxes-group">
-          <div className="checkboxes-row">
-            {Array.from({ length: topRowBoxes }, (_, i) => renderCheckbox(i))}
-          </div>
-          {bottomRowBoxes > 0 && (
-            <div className="checkboxes-row">
-              {Array.from({ length: bottomRowBoxes }, (_, i) => renderCheckbox(i + topRowBoxes))}
-            </div>
-          )}
+  
+        <div className="checkboxes-container">
+          {Array.from({ length: max_marks }, (_, i) => renderCheckbox(i))}
         </div>
       </div>
     </div>
