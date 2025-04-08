@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import LobbyPage from './pages/LobbyPage.tsx'; 
+import CaptainPage from './pages/CaptainPage.tsx';
 
 function App() {
   return (
@@ -21,6 +22,10 @@ function App() {
           <ProtectedRoute> 
             <LobbyPage /> 
           </ProtectedRoute>} />
+          <Route path="/Captain" element= {
+          <ProtectedRoute> 
+            <CaptainPage /> 
+          </ProtectedRoute>} />
 
       </Routes>
           </BrowserRouter>
@@ -29,3 +34,23 @@ function App() {
 }
 
 export default App;
+// =======
+// import React from "react";
+// import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+// import CaptainPage from "./pages/CaptainPage";
+// import DetectorPage from "./pages/DetectorPage";
+
+// const App: React.FC = () => {
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route path="/" element={<Navigate to="/captain" />} />
+//         <Route path="/captain" element={<CaptainPage />} />
+//         <Route path="/detector" element={<DetectorPage />} />
+//       </Routes>
+//     </Router>
+//   );
+// };
+
+// export default App;
+// // >>>>>>> origin/dev-mecano
