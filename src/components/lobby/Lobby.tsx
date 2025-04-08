@@ -81,7 +81,7 @@ const Lobby: React.FC<LobbyProps> = ({
       console.log("update teams", updatedTeams.red.captain)
     });
     newSocket?.on("game_start", ()=> {
-      navigate('/bonne page');
+      // navigate('/bonne page');
 
     })
  
