@@ -31,6 +31,34 @@ interface LobbyProps {
 type TeamType = 'blue' | 'red';
 type RoleSelection = { team: TeamType; role: string } | null;
 
+const savePlayerPerformance = async (performanceData: {
+  player: string;
+  game: string;
+  score: number;
+  role: string;
+}) => {
+  try {
+    const response = await fetch('http://localhost:3000/api/performances/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(performanceData)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Performance enregistrée:', data);
+    return data;
+  } catch (error) {
+    console.error('Erreur lors de lenregistrement:', error);
+    throw error;
+  }
+};
+
 const Lobby: React.FC<LobbyProps> = ({ 
   availableRoles = ["Capitaine", "Mecano"]
 }) => {
@@ -59,6 +87,7 @@ const Lobby: React.FC<LobbyProps> = ({
 
       try {
           const decoded = jwtDecode<JwtPayload>(token);
+          console.log("decode "+decoded.username)
           setCurrentUserId(decoded.id);
           return decoded;
       } catch (err) {
@@ -81,13 +110,27 @@ const Lobby: React.FC<LobbyProps> = ({
     newSocket.emit('getRole');
     newSocket.on('teams_update', (updatedTeams: TeamUpdate) => {
       setTeams(updatedTeams);
-      console.log("update teams YOOO", updatedTeams)
-      console.log("red Captain", updatedTeams.red.captain)
     });
-    newSocket.on("game_start", ()=> {
-      console.log("selected (via ref):", selectedRef.current); 
-      navigate("/"+selectedRef.current?.role)
-    })
+    newSocket.on("game_start", async (data) => {
+      try {
+        if (!currentUserId || !selectedRef.current?.role) {
+          console.error('Données manquantes');
+          return;
+        }
+    
+        const role = selectedRef.current.role.toString();
+        await savePlayerPerformance({
+          player: currentUserId,
+          game: data.gameId,
+          role, // Utilisation directe
+          score: 0
+        });
+        navigate(`/${role.toLowerCase()}`);
+    
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    });
  
     setSocket(newSocket);
 
@@ -129,7 +172,6 @@ const Lobby: React.FC<LobbyProps> = ({
     // Sélectionner le nouveau rôle
     const newSelection = { team, role };
     setSelected(newSelection);
-    console.log(newSelection);
     socket?.emit('role_selection', { 
       team, 
       role, 
