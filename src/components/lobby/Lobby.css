@@ -1,0 +1,64 @@
+/*
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #007bff;
+    cursor: pointer;
+    transition: all 0.3s ease; 
+}
+
+
+button:active {
+    transform: scale(0.98);
+}
+
+button.selected {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+button.selected[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+*/
+/* Lobby.css */
+.teams-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 2rem;
+  }
+  
+  .team-section {
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  
+  .blue-team {
+    background-color: rgba(0, 123, 255, 0.1);
+    border: 3px solid #007bff;
+  }
+  
+  .red-team {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 3px solid #dc3545;
+  }
+  
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .nes-btn.is-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
