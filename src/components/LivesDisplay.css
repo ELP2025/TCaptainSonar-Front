@@ -1,0 +1,23 @@
+.lives-display {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    display: flex;
+    gap: 5px;
+  }
+  
+  .heart {
+    font-size: 24px;
+    opacity: 0.3;
+  }
+  
+  .heart.active {
+    opacity: 1;
+    animation: pulse 0.5s;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }

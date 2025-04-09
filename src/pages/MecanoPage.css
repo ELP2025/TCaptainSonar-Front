@@ -1,53 +1,160 @@
-  .mecano-wrapper {
-    position: relative;
-    width: 1000px;
-    height: auto;
-    margin-left: 400px;
-    margin-top: 20px;
-  }
-
-  .mecano-wrapper h1{
-    color: #003b5a;
-    font-size: 30px;  /* Réduit de 28px */
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 8px;  /* Réduit de 10px */
-    font-weight: bold;
-    margin-left: 300px;
-    margin-bottom: 50px;
+.mecano-wrapper {
+  position: relative;
+  width: 1000px;
+  height: auto;
+  margin-left: 400px;
+  margin-top: 20px;
 }
-  
-  
-  .mecano-background {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  
-  
-  .mecano-button {
-    position: absolute;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-  }
-  
-  .mecano-button.crossed {
-    background-color: rgba(255, 0, 0, 0.7);
-  }
-  
-  .cross {
-    color: white;
-    font-size: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
+
+.mecano-wrapper h1 {
+  color: #003b5a;
+  font-size: 30px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  margin-left: 300px;
+  margin-bottom: 20px;
+}
+
+.zone-selector {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  margin-left: 0px;
+}
+
+.zone-button {
+  padding: 8px 16px;
+  background-color: #003b5a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.zone-button.active {
+  background-color: #0066a1;
+  box-shadow: 0 0 5px #00aaff;
+}
+
+.mecano-background {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.mecano-button {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.mecano-button.crossed {
+  background-color: rgba(255, 0, 0, 0.7);
+}
+
+.mecano-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cross {
+  color: white;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Circuits */
+
+.circuit-status-panel {
+  position: absolute;
+  left: -350px;
+  top: 100px;
+  width: 200px;
+  font-family: monospace;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.circuit-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+}
+
+.circuit-line .circuit-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 5px;
+}
+
+.circuit-line.jaune .circuit-dot {
+  background-color: yellow;
+  box-shadow: 0 0 5px yellow;
+}
+
+.circuit-line.orange .circuit-dot {
+  background-color: orange;
+  box-shadow: 0 0 5px orange;
+}
+
+.circuit-line.gris .circuit-dot {
+  background-color: gray;
+  box-shadow: 0 0 5px gray;
+}
+
+.circuit-indicator {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.circuit-jaune {
+  background-color: yellow;
+  box-shadow: 0 0 5px yellow;
+}
+
+.circuit-orange {
+  background-color: orange;
+  box-shadow: 0 0 5px orange;
+}
+
+.circuit-gris {
+  background-color: gray;
+  box-shadow: 0 0 5px gray;
+}
+
+/* Historique*/
+.chat-history {
+  position: absolute;
+  left: -450px;
+  top: 150px;
+  width: 200px;
+  font-family: monospace;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

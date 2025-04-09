@@ -8,8 +8,8 @@ import LobbyPage from './pages/LobbyPage.tsx';
 import GamePage from './pages/GamePage.tsx';
 import CaptainPage from './pages/CaptainPage.tsx';
 import SecondPage from './pages/SecondPage.tsx';
+import MecanoPage from './pages/MecanoPage.tsx';
  
-
 function App() {
   return (
     <AuthProvider>
@@ -20,7 +20,8 @@ function App() {
           <ProtectedRoute>
             <HomePage  />
           </ProtectedRoute>
-        } />        <Route path="*" element={<LoginPage />} />
+        } />        
+        <Route path="*" element={<LoginPage />} />
         <Route path="/Lobby" element= {
           <ProtectedRoute> 
             <LobbyPage /> 
@@ -36,7 +37,11 @@ function App() {
             <SecondPage />
           </ProtectedRoute>
         } />
-
+        <Route path="/mecano" element={
+            <ProtectedRoute>
+                <MecanoPage />
+            </ProtectedRoute>
+            } />
       </Routes>
           </BrowserRouter>
     </AuthProvider>
