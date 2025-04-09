@@ -1,53 +1,79 @@
-  .mecano-wrapper {
-    position: relative;
-    width: 1000px;
-    height: auto;
-    margin-left: 400px;
-    margin-top: 20px;
-  }
-
-  .mecano-wrapper h1{
-    color: #003b5a;
-    font-size: 30px;  /* Réduit de 28px */
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 8px;  /* Réduit de 10px */
-    font-weight: bold;
-    margin-left: 300px;
-    margin-bottom: 50px;
+.mecano-wrapper {
+  position: relative;
+  width: 1000px;
+  height: auto;
+  margin-left: 400px;
+  margin-top: 20px;
 }
-  
-  
-  .mecano-background {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  
-  
-  .mecano-button {
-    position: absolute;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-  }
-  
-  .mecano-button.crossed {
-    background-color: rgba(255, 0, 0, 0.7);
-  }
-  
-  .cross {
-    color: white;
-    font-size: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
+
+.mecano-wrapper h1 {
+  color: #003b5a;
+  font-size: 30px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  margin-left: 300px;
+  margin-bottom: 20px;
+}
+
+.zone-selector {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  margin-left: 0px;
+}
+
+.zone-button {
+  padding: 8px 16px;
+  background-color: #003b5a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.zone-button.active {
+  background-color: #0066a1;
+  box-shadow: 0 0 5px #00aaff;
+}
+
+.mecano-background {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.mecano-button {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.mecano-button.crossed {
+  background-color: rgba(255, 0, 0, 0.7);
+}
+
+.mecano-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cross {
+  color: white;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
