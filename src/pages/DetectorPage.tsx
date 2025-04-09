@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import DetectorMap from "../components/DetectorMap";
+import LivesDisplay from '../components/LivesDisplay';
+import ChatHistory from '../components/ChatHistory';
 import "./DetectorPage.css";
 
 type Coord = {
@@ -28,6 +30,7 @@ const DetectorPage: React.FC = () => {
     <div className="detector-page">
       <h1>🎯 Localiser le sous-marin ennemi 🎯</h1>
       <p>🖱️ Clic gauche pour marquer une croix — 🖱️ Clic droit pour effacer</p>
+      <LivesDisplay lives={4} />
       <DetectorMap crosses={crosses} onCellClick={toggleCross} />
     </div>
   );

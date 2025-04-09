@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import LivesDisplay from '../components/LivesDisplay';
+import ChatHistory from '../components/ChatHistory';
 import './MecanoPage.css';
 
 // Positions groupées par zone (version originale complète)
@@ -46,6 +48,7 @@ const allPositions = Array.from(
 });
 
 const MecanoPage = () => {
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [selectedZone, setSelectedZone] = useState<string | null>(null);
   const [crosses, setCrosses] = useState<Record<string, boolean>>(
     Object.fromEntries(allPositions.map(pos => [`${pos[0]},${pos[1]}`, false]))
@@ -94,8 +97,12 @@ const MecanoPage = () => {
   }, [crosses]);
 
   return (
+
     <div className="mecano-wrapper">
+      <LivesDisplay lives={4} />
+
       <h1>⚙️ Cocher une panne ⚙️</h1>
+
       
       <div className="zone-selector">
         <button 
@@ -142,6 +149,13 @@ const MecanoPage = () => {
         })}
       </div>
 
+      <div className="chat-history">
+      <ChatHistory 
+        messages={chatMessages} 
+        title="Historique" 
+        maxMessages={7} 
+      />
+      </div>
 
       <img src="/assets/mecano.jpg" alt="Mécano" className="mecano-background" />
       

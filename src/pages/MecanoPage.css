@@ -145,3 +145,16 @@
   background-color: gray;
   box-shadow: 0 0 5px gray;
 }
+
+/* Historique*/
+.chat-history {
+  position: absolute;
+  left: -450px;
+  top: 150px;
+  width: 200px;
+  font-family: monospace;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
