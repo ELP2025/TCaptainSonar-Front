@@ -77,3 +77,71 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/* Circuits */
+
+.circuit-status-panel {
+  position: absolute;
+  left: -350px;
+  top: 100px;
+  width: 200px;
+  font-family: monospace;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.circuit-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+}
+
+.circuit-line .circuit-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 5px;
+}
+
+.circuit-line.jaune .circuit-dot {
+  background-color: yellow;
+  box-shadow: 0 0 5px yellow;
+}
+
+.circuit-line.orange .circuit-dot {
+  background-color: orange;
+  box-shadow: 0 0 5px orange;
+}
+
+.circuit-line.gris .circuit-dot {
+  background-color: gray;
+  box-shadow: 0 0 5px gray;
+}
+
+.circuit-indicator {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.circuit-jaune {
+  background-color: yellow;
+  box-shadow: 0 0 5px yellow;
+}
+
+.circuit-orange {
+  background-color: orange;
+  box-shadow: 0 0 5px orange;
+}
+
+.circuit-gris {
+  background-color: gray;
+  box-shadow: 0 0 5px gray;
+}
