@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import CaptainPage from "./pages/CaptainPage";
 import DetectorPage from "./pages/DetectorPage";
-import MecanoPage from "./pages/MecanoPage.css";
+import MecanoPage from "./pages/MecanoPage";
 
 const App: React.FC = () => {
   return (
