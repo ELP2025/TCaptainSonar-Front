@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import History from "../components/History";
 import DisconnectButton from "../components/DisconnectButton";
-
+import { useCss } from "../hooks/useCss";
 
 
 
 function HomePage() {
     const [showHistory, setShowHistory] = useState(false); 
-
+    useCss(
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
+        "bootstrap-css"
+      );
     return (
         
         <div style={{ position: 'relative', minHeight: '100vh' }}>

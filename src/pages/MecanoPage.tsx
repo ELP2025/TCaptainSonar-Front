@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import LivesDisplay from '../components/LivesDisplay';
 import ChatHistory from '../components/ChatHistory';
 import './MecanoPage.css';
+import './MecanoPage.css';
+
 
 // Positions groupées par zone (version originale complète)
 const zonePositions = {
@@ -186,3 +188,4 @@ const MecanoPage = () => {
 };
 
 export default MecanoPage;
+

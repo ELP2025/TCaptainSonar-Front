@@ -153,7 +153,17 @@ const CaptainPage: React.FC = () => {
             : "🧭 Choisir position initiale 🧭"}
         </h1>
       </div>
-
+      <div className="main-content">
+        <div className="chat-container">
+          <div className="chat-header">Historique</div>
+          <div className="chat-messages">
+            {chatMessages.map((msg, index) => (
+              <div key={index} className={`chat-message ${msg.isSystem ? "system" : ""}`}>
+                {msg.text}
+              </div>
+            ))}
+          </div>
+        </div>
       <LivesDisplay lives={4} />
       
       <div className="main-content">

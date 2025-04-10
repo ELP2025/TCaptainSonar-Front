@@ -25,23 +25,19 @@ function App() {
         <Route path="/Lobby" element= {
           <ProtectedRoute> 
             <LobbyPage /> 
-          </ProtectedRoute>
-        } />
-        <Route path="/captain" element={
-          <ProtectedRoute>
-            <CaptainPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/second" element={
-          <ProtectedRoute>
-            <SecondPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/mecano" element={
-            <ProtectedRoute>
-                <MecanoPage />
-            </ProtectedRoute>
-            } />
+          </ProtectedRoute>} />
+          <Route path="/Capitaine" element= {
+          <ProtectedRoute> 
+            <CaptainPage /> 
+          </ProtectedRoute>} />
+          <Route path="/Mecano" element= {
+          <ProtectedRoute> 
+            <MecanoPage /> 
+          </ProtectedRoute>} />
+          <Route path="/Detecteur" element= {
+          <ProtectedRoute> 
+            <DetectorPage /> 
+          </ProtectedRoute>} />
       </Routes>
           </BrowserRouter>
     </AuthProvider>
