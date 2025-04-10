@@ -5,7 +5,7 @@ import { io, Socket } from 'socket.io-client';
 import Cookies from 'js-cookie';
 import { useAuth } from '../../context/AuthContext';
 import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Types
 type Team = {
@@ -26,6 +26,13 @@ interface JwtPayload {
 
 interface LobbyProps {
   availableRoles?: string[];
+}
+interface Team {
+  Captain: string;
+}
+interface TeamUpdate {
+  blue: Team;
+  red: Team;
 }
 
 type TeamType = 'blue' | 'red';
@@ -133,6 +140,22 @@ const Lobby: React.FC<LobbyProps> = ({
     });
  
     setSocket(newSocket);
+  
+    newSocket.on('roles_update', (updatedOccupied) => {
+      console.log('Reçu roles_update:', updatedOccupied); // Debug 4
+      setOccupiedRoles(updatedOccupied);
+    });
+
+    newSocket.on('game_start', (data: TeamUpdate) => {
+
+      if (data.blue.Captain === "Coustaud") {
+        navigate('/captain');
+      } else if (data.red.Captain === "Bobleponge_carre") {
+        navigate('/captain');
+      } else {
+        navigate('/member');
+      }
+    });
 
     return () => {
       newSocket.off('teams_update');

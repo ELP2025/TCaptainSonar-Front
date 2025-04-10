@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import ImageMap from "../components/ImageMap";
+import LivesDisplay from '../components/LivesDisplay';
+import ChatHistory from '../components/ChatHistory';
 import "./CaptainPage.css";
 
 type Coord = {
@@ -20,6 +22,7 @@ const CaptainPage: React.FC = () => {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isBlocked, setIsBlocked] = useState(false);
   const MAX_MESSAGES = 5;
+  const [lives, setLives] = useState(4);
 
   const addChatMessage = (text: string, isSystem: boolean = false) => {
     setChatMessages(prev => {
@@ -150,7 +153,6 @@ const CaptainPage: React.FC = () => {
             : "🧭 Choisir position initiale 🧭"}
         </h1>
       </div>
-      
       <div className="main-content">
         <div className="chat-container">
           <div className="chat-header">Historique</div>
@@ -162,6 +164,11 @@ const CaptainPage: React.FC = () => {
             ))}
           </div>
         </div>
+      <LivesDisplay lives={4} />
+      
+      <div className="main-content">
+        
+        <ChatHistory messages={chatMessages} />
         
         <div className="map-and-controls">
           <div className="control-panel">

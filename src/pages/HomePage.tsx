@@ -13,9 +13,10 @@ function HomePage() {
         "bootstrap-css"
       );
     return (
+        
         <div style={{ position: 'relative', minHeight: '100vh' }}>
             <div className="nes-container">
-                <h1>Page d'Accueil</h1>
+                <h1>TCaptain Sonar</h1>
             </div>
 
             <div className="nes-container" style={{ margin: '2rem auto', textAlign: 'center' }}>
@@ -24,7 +25,7 @@ function HomePage() {
                     className="nes-btn is-success" 
                     style={{ marginBottom: '1rem' }}
                 >
-                    Accéder au Lobby
+                    Lancer une partie
                 </Link>
             </div>
             
