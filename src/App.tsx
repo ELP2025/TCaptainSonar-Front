@@ -27,7 +27,7 @@ function App() {
           </ProtectedRoute>} />
           <Route path="/Capitaine" element= {
           <ProtectedRoute> 
-            <CaptainPage /> 
+            <CaptainPage/> 
           </ProtectedRoute>} />
           <Route path="/Mecano" element= {
           <ProtectedRoute> 

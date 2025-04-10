@@ -1,5 +1,7 @@
 .mecano-wrapper {
-  position: relative;
+  position:absolute;
+  left:0%;
+  top:0%;;
   width: 1000px;
   height: auto;
   margin-left: 400px;
