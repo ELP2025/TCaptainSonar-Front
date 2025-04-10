@@ -8,6 +8,7 @@ import LobbyPage from './pages/LobbyPage.tsx';;
 import CaptainPage from './pages/CaptainPage.tsx';
 import SecondPage from './pages/SecondPage.tsx';
 import MecanoPage from './pages/MecanoPage.tsx';
+import DetectorPage from './pages/DetectorPage.tsx';
  
 function App() {
   return (
@@ -37,6 +38,11 @@ function App() {
           <ProtectedRoute> 
             <SecondPage /> 
           </ProtectedRoute>} />
+          <Route path="/Detector" element= {
+            <ProtectedRoute>
+              <DetectorPage/>
+            </ProtectedRoute>
+          }  />
       </Routes>
           </BrowserRouter>
     </AuthProvider>
