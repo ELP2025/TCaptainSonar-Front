@@ -27,13 +27,6 @@ interface JwtPayload {
 interface LobbyProps {
   availableRoles?: string[];
 }
-interface Team {
-  Captain: string;
-}
-interface TeamUpdate {
-  blue: Team;
-  red: Team;
-}
 
 type TeamType = 'blue' | 'red';
 type RoleSelection = { team: TeamType; role: string } | null;

@@ -4,8 +4,7 @@ import HomePage from './pages/HomePage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
-import LobbyPage from './pages/LobbyPage.tsx';
-import GamePage from './pages/GamePage.tsx';
+import LobbyPage from './pages/LobbyPage.tsx';;
 import CaptainPage from './pages/CaptainPage.tsx';
 import SecondPage from './pages/SecondPage.tsx';
 import MecanoPage from './pages/MecanoPage.tsx';
@@ -34,9 +33,9 @@ function App() {
           <ProtectedRoute> 
             <MecanoPage /> 
           </ProtectedRoute>} />
-          <Route path="/Detecteur" element= {
+          <Route path="/Second" element= {
           <ProtectedRoute> 
-            <DetectorPage /> 
+            <SecondPage /> 
           </ProtectedRoute>} />
       </Routes>
           </BrowserRouter>

@@ -215,8 +215,9 @@ const CaptainPage: React.FC = () => {
         </div>
       </div>
     </div>
+    </div>
   );
-};
+}
 
 const ISLANDS: Coord[] = [
   // Secteur 1 (A1-E5)
